@@ -1,0 +1,235 @@
+.dvd-form-container {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.dvd-form {
+  background-color: aliceblue;
+  margin: 0;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 70%;
+}
+.inner-form{
+  position: relative;
+}
+.form-button button:first-of-type{
+margin-right: 10%;
+}
+.first-col{
+  display: inline-block;
+  vertical-align: top;
+  width: 45%;
+}
+.second-col{
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+  margin-left: 5%;
+}
+.third-col{
+  margin-left: 120px;
+  display: inline-block;
+  vertical-align: top;
+  width: 45%;
+  position: relative;
+}
+.first-sub-col{
+  display: inline-block;
+}
+.second-sub-col{
+  display: inline-block;
+  float: right;
+}
+.first-sub-col mat-form-field{
+  width: 500px;
+}
+.second-sub-col mat-form-field{
+  width: 70px;
+}
+.third-col chip-form-component {
+  width: 100%;
+}
+.theme-container{
+  vertical-align: middle;
+  display: inline-block;
+  width: 70%;
+}
+.theme-container mat-form-field{
+  width: 100%;
+}
+.image-container{
+  vertical-align: top;
+  display: inline-block;
+  text-align: right;
+  width: 25%;
+  float: right;
+  margin-left: 5%;
+  margin-top: 10px;
+ }
+.image-wrapper {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  /*Using a background color, but you can use a background image to represent a button*/
+  background-image: url("src/assets/img/image-icon.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.54;
+}
+.image-wrapper-selected {
+  /*Using a background color, but you can use a background image to represent a button*/
+  background-image: url("src/assets/img/image-icon-primary.png");
+  opacity: 1;
+}
+.image-input {
+  cursor: pointer;
+  height: 100%;
+  position:absolute;
+  top: 0;
+  right: 0;
+  z-index: 99;
+  /*This makes the button huge. If you want a bigger button, increase the font size*/
+  font-size:12px;
+  /*Opacity settings for all browsers*/
+  opacity: 0;
+  -moz-opacity: 0;
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
+}
+.image-button{
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 5%;
+}
+.image-delete-icon{
+  height: 10px;
+  width: 10px;
+  line-height: 10px;
+  font-size: 20px;
+}
+.image-delete-button mat-icon{
+  vertical-align: top;
+}
+
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+  top: -30px;
+}
+.pays-container{
+  width: 100%;
+}
+.langues-container{
+  width: 100%;
+}
+.language-chip{
+  display: inline-block;
+  vertical-align: bottom;
+  width: 100%;
+}
+.description-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+.description-toggle-container{
+  color:rgba(0, 0, 0, 0.54);
+}
+.description-container mat-form-field{
+  width: 100%;
+}
+.row-list{
+  margin-top: 70px;
+}
+.list-select-container{
+  display: inline-block;
+}
+.list-select-container mat-form-field {
+  max-width: 20%;
+  font-size: 13px;
+  vertical-align: top;
+}
+.detail-group{
+  max-height: 40px;
+}
+.mat-button-toggle-checked {
+  background-color: #ff4081;
+  color: rgba(255,255,255,.87);
+}
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 30px;
+}
+.row-director{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.row-detail{
+  margin-top: 10px;
+  margin-bottom: 100px;
+  position: relative;
+}
+.row-detail-large{
+  margin-bottom: 180px;
+}
+.row-detail-xlarge{
+  margin-bottom: 260px;
+}
+.shortfilm-button-container{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.shortfilm-array-container{
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.shortfilm-area-container{
+  display: inline-block;
+  margin-top: 10px;
+  width: 25%;
+  position: relative;
+}
+.shortfilm-area-form{
+  width: 85%;
+}
+.shortfilm-area-button-container{
+  position: absolute;
+  right: 5%;
+  margin: auto;
+}
+.shortfilm-area-button-container:not(:first-of-type){
+  margin-left: 10px;
+}
+.shortfilm-area-button-container button{
+  margin-top: 10px;
+}
+.footer-form{
+}
+.theme-param{
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+}
+.center{
+  text-align: center;
+}
+.right{
+  text-align: right;
+}
+.full-width{
+  width: 100%;
+}
+.relative{
+  position: relative;
+}
+

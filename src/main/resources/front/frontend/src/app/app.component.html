@@ -1,0 +1,23 @@
+<div id="app">
+  <div class="nav-icon">
+    <div class="home-icon" (click)="home()">
+      <mat-icon color="primary">home</mat-icon>
+    </div>
+    <div class="logout-icon" *ngIf="isLoggedIn" (click)="logout()">
+      <mat-icon color="primary">exit_to_app</mat-icon>
+    </div>
+    <div class="import-icon" *ngIf="isLoggedIn" (click)="import()">
+      <mat-icon> import_export</mat-icon>
+    </div>
+    <div class="login-icon" *ngIf="!isLoggedIn" (click)="login()">
+      <mat-icon color="primary">supervisor_account</mat-icon>
+    </div>
+    <div class="add-icon" *ngIf="isLoggedIn" (click)="addFilm()">
+      <mat-icon color="primary">add</mat-icon>
+    </div>
+    <div class="director-icon" *ngIf="isLoggedIn && isDirectorList" (click)="getDirectorNameOpenDialog()">
+      <mat-icon color="primary">edit</mat-icon>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

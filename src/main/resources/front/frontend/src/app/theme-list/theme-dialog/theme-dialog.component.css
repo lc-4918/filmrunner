@@ -1,0 +1,28 @@
+.dialog-container{
+  height: 400px;
+  width: 500px;
+  padding: 20px;
+  position: relative;
+}
+.title{
+  width: 100%;
+  text-align: center;
+}
+.dialog-chip-field{
+  width: 100%;
+}
+.dialog-edit-container{
+  text-align: center;
+}
+.theme-gen-container{
+  margin-top: 5%;
+}
+.dialog-button{
+  position: absolute;
+  bottom: 20px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  width: 300px;
+}

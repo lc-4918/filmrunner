@@ -1,0 +1,104 @@
+<mat-card class="register-card">
+  <div class="card-header">
+    <div class="center">
+      <div class="card-title"><h1>Nouvel utilisateur</h1></div>
+    </div>
+  </div>
+  <form
+    *ngIf="!isSuccessful"
+    name="form"
+    (ngSubmit)="f.form.valid && onSubmit()"
+    #f="ngForm"
+    novalidate
+  >
+    <mat-card-content>
+      <img
+        id="profile-img"
+        src="assets/img/avatar.png"
+      />
+      <mat-form-field class="example-full-width">
+        <mat-label>Utilisateur</mat-label>
+        <input matInput
+               type="text"
+               class="form-control"
+               name="username"
+               #username="ngModel"
+               id="username"
+               [(ngModel)]="form.username"
+               required
+               minlength="3"
+               maxlength="20"
+               #username="ngModel"
+        >
+        <div class="alert-danger" *ngIf="f.submitted && username.invalid">
+          <div *ngIf="username.errors && (username.dirty || username.touched)">
+            <div *ngIf="username.errors.required">Un nom d'utilisateur est requis</div>
+            <div *ngIf="username.errors.minlength">
+              Le nom d'utilisateur doit avoir 3 caractères au minimum
+            </div>
+          </div>
+          <div *ngIf="username.errors && (username.dirty || username.touched)">
+            <div *ngIf="username.errors.maxlength">
+              Le nom d'utilisateur doit avoir au maximum 20 caractères
+            </div>
+          </div>
+        </div>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput
+               type="email"
+               class="form-control"
+               name="email"
+               id="email"
+               [(ngModel)]="form.email"
+               required
+               email
+               #email="ngModel"
+        />
+        <div class="alert-danger" *ngIf="f.submitted && email.invalid">
+          <div *ngIf="email.errors && (email.dirty || email.touched)">
+            <div *ngIf="email.errors.required">Email est requis</div>
+            <div *ngIf="email.errors.email">
+              L'email doit être valide
+            </div>
+          </div>
+        </div>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Mot de passe</mat-label>
+        <input matInput
+               type="password"
+               class="form-control"
+               name="password"
+               id="password"
+               [(ngModel)]="form.password"
+               required
+               minlength="6"
+               #password="ngModel">
+        <div class="alert-danger" *ngIf="f.submitted && password.invalid">
+          <div *ngIf="password.errors && (password.dirty || password.touched)">
+            <div *ngIf="password.errors.required">Un mot de passe est requis</div>
+            <div *ngIf="password.errors.minlength">
+              Le mot de passe doit avoir au moins 6 caractères
+            </div>
+          </div>
+        </div>
+      </mat-form-field>
+      <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
+        Signup failed!<br />{{ errorMessage }}
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="form-group center">
+        <button mat-raised-button color="primary">Enregistrer</button>
+      </div>
+      <div class="form-group">
+        <div class="alert alert-success" *ngIf="isSuccessful">
+          Enregistrement avec succès!
+        </div>
+      </div>
+    </mat-card-actions>
+  </form>
+</mat-card>
+

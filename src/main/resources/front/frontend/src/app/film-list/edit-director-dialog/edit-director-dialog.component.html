@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Modification du réalisateur: <span class="director-name">{{data.name}}</span> </h1>
+<div mat-dialog-content class="center">
+  <mat-form-field appearance="outline">
+    <mat-label>Nom du réalisateur</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="buttons center">
+  <button mat-button (click)="onNoClick()">Annuler</button>
+  <button mat-raised-button [mat-dialog-close]="data.name" cdkFocusInitial color="primary">Mettre à jour</button>
+</div>

@@ -1,0 +1,43 @@
+/* You can add global styles to this file, and also import other style files */
+html{
+/*  background-image: url("./assets/img/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;*/
+  background-color: #EDF5E3;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+  -ms-overflow-style: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+}
+
+.info-snackbar{
+  background: white;
+  color: black;
+}
+.warn-snackbar{
+  background: orange;
+  color: black;
+}
+.error-snackbar{
+  background: darkred;
+  color: white;
+}
+.success-snackbar{
+  background: green;
+  color: white;
+}
+.message-container{
+  position: relative;
+}
+.message-button{
+  position: absolute;
+  left: 0;
+}
+.message-body{
+  text-align: center;
+}

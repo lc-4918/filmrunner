@@ -1,0 +1,19 @@
+h1 {
+  text-align: center;
+}
+.director-name{
+  color: #659DBD;
+}
+mat-form-field{
+  min-width: 300px;
+}
+.mat-dialog-actions{
+  display: block;
+}
+.mat-dialog-actions button{
+  margin: 10px 10px;
+}
+
+.center{
+  text-align: center;
+}

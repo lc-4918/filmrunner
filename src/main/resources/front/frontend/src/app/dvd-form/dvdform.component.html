@@ -1,0 +1,216 @@
+<div class="dvd-form-container">
+  <div class="dvd-form">
+    <div class="inner-form">
+      <div class="first-col">
+        <div class="first-sub-col">
+          <div class="title-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Titre</mat-label>
+              <input matInput [(ngModel)]="componentDvd.titre">
+            </mat-form-field>
+          </div>
+          <div class="titlevf-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Titre VF</mat-label>
+              <input matInput [(ngModel)]="componentDvd.titreVf">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="second-sub-col right">
+          <div class="year-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Année</mat-label>
+              <input numeric matInput [(ngModel)]="componentDvd.annee">
+            </mat-form-field>
+          </div>
+          <div class="duration-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Durée</mat-label>
+              <input numeric matInput [(ngModel)]="componentDvd.duree">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="second-col">
+        <div>
+          <div class="theme-container">
+            <mat-form-field appearance="fill">
+              <mat-label>Thèmes</mat-label>
+              <mat-select [formControl]="themesControl" multiple>
+                <mat-select-trigger>
+                  {{themesControl.value ? themesControl.value[0] : ''}}
+                  <span *ngIf="themesControl.value?.length == 2" class="example-additional-selection">
+                    {{themesControl.value ? ', '+themesControl.value[1] : ''}}
+                  </span>
+                  <span *ngIf="themesControl.value?.length > 2" class="example-additional-selection">
+                    (+{{themesControl.value.length - 1}} {{themesControl.value?.length === 2 ? 'other' : 'others'}})
+                  </span>
+                </mat-select-trigger>
+                <mat-option *ngFor="let theme of themes" [value]="theme">{{theme}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="image-container">
+            <span *ngIf="!hasImage(); else badge">
+              <span class="image-wrapper"
+                    [ngClass]="hasImage()">
+                <input type="file" (change)="selectFile($event)" class="image-input"/>
+              </span>
+            </span>
+            <ng-template #badge>
+              <button type="button" mat-icon-button color="primary" aria-label="Supprimer" class="image-delete-button" (click)="deleteFile()">
+                <mat-icon class="image-delete-icon">delete</mat-icon>
+              </button>
+              <span matBadge="1" matBadgePosition="above after" matBadgeOverlap="true" matBadgeColor="accent">
+                <span class="image-wrapper"
+                     [ngClass]="hasImage()" title="{{currentFile}}">
+                  <input type="file" (change)="selectFile($event)" class="image-input"/>
+                </span>
+              </span>
+            </ng-template>
+            <!--<button mat-stroked-button type="button" class="btn btn-success image-button" *ngIf="selectedFiles" (click)="upload()">
+              Upload
+            </button>-->
+          </div>
+        </div>
+        <div class="pays-container">
+          <chip-form-component
+            [title]="chipTitles[1]"
+            [placeholder]="chipPlaceholders[1]"
+            [elements]="componentDvd.pays"
+            [listOfElements]="pays"
+            [limitedChoice]="true"
+            (elementsEmitter)="setChipData($event,'pays')"
+            class="country-chip">
+          </chip-form-component>
+        </div>
+        <div class="relative">
+          <div class="description-container">
+            <div class="description-toggle-container">
+              <mat-slide-toggle (change)="toggleDescTitle($event)" [(ngModel)]="hasDescription">{{descriptionToggleLabel}}</mat-slide-toggle>
+            </div>
+            <div *ngIf="hasDescription" class="description-area-container">
+              <mat-form-field class="description-form">
+                <mat-label>Description</mat-label>
+                <textarea matInput [(ngModel)]="this.componentDvd.description" placeholder="Description du film" class="description-area"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row-list">
+        <div class="first-col center">
+          <span class="list-select-container">
+            <mat-form-field appearance="outline">
+              <mat-label>Type</mat-label>
+              <mat-select [(value)]="componentDvd.format">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let type of dvdTypeArray" [value]="type.id">{{type.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Support</mat-label>
+              <mat-select [(value)]="componentDvd.support">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let support of dvdSupportArray" [value]="support.id">{{support.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Genre</mat-label>
+              <mat-select [(value)]="componentDvd.type">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let genre of dvdGenreArray" [value]="genre.id">{{genre.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Norme</mat-label>
+              <mat-select [(value)]="componentDvd.norme">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let norme of dvdNormeArray" [value]="norme.id">{{norme.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Source</mat-label>
+              <mat-select [(value)]="componentDvd.source">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let source of dvdSourceArray" [value]="source.id">{{source.label}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </span>
+        </div>
+        <div class="second-col">
+          <div class="langues-container">
+            <chip-form-component
+              [title]="chipTitles[2]"
+              [placeholder]="chipPlaceholders[2]"
+              [elements]="componentDvd.subLangs"
+              [listOfElements]="pays"
+              [limitedChoice]="true"
+              (elementsEmitter)="setChipData($event,'langues')"
+              class="language-chip">
+            </chip-form-component>
+          </div>
+        </div>
+      </div>
+      <div class="row-director">
+        <chip-form-component
+          [title]="chipTitles[0]"
+          [placeholder]="chipPlaceholders[0]"
+          [elements]="componentDvd.realisateurs"
+          [listOfElements]="directors"
+          (elementsEmitter)="setChipData($event,'realisateurs')"
+          class="director-chip">
+        </chip-form-component>
+      </div>
+      <div class="row-detail" [ngClass]="hasMoreShortfilms()">
+        <div class="center">
+          <mat-button-toggle-group #group="matButtonToggleGroup" appearance="legacy" multiple=true class="detail-group"><!--dvdDetailMap.get(item.id)-->
+            <mat-button-toggle *ngFor="let item of dvdDetailArray; let index = index;" (change)="detailToggleChanged($event,item.id)" [checked]="dvdDetailMap.get(item.id)">{{item.label}}</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="shortfilm-container" *ngIf="hasShortfilm">
+          <div class="shortfilm-button-container">
+            <label>
+              <span>Ajouter un court-métrage</span>
+              <button type="button" mat-icon-button color="primary" aria-label="Ajouter court-métrage" (click)="addShortfilm()">
+                <mat-icon>add</mat-icon>
+              </button>
+            </label>
+          </div>
+          <ng-container [formGroup]="shortfilmForm">
+            <div class="shortfilm-array-container" formArrayName="shortfilmTab">
+              <div class="shortfilm-area-container" *ngFor="let _ of shortfilmTab.controls; index as i;">
+                <ng-container [formGroupName]="i">
+                  <mat-form-field class="shortfilm-area-form">
+                    <mat-label>Court métrage #{{i+1}}</mat-label>
+                    <textarea matInput formControlName="cmName" placeholder="Description du film" class="description-area"></textarea>
+                  </mat-form-field>
+                  <span class="shortfilm-area-button-container">
+                  <button type="button" mat-icon-button *ngIf="hasMoreThanOneShortfilm()" color="primary" aria-label="Supprimer" (click)="deleteShortfilm(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </span>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="footer-form center">
+        <div class="theme-param">
+          <app-theme-list></app-theme-list>
+        </div>
+        <div class="form-button">
+          <button type="button" mat-raised-button
+                  routerLink="/">
+            Annuler
+          </button>
+          <button type="button" mat-raised-button
+                  (click)="validForm()"
+                  color="primary">{{!!this.dvdId ? 'Mettre à jour':'Créer'}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

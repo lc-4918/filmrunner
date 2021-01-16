@@ -1,0 +1,55 @@
+<ng-container *ngIf="film">
+  <h1 mat-dialog-title>{{film.titre}}</h1>
+  <div mat-dialog-content>
+    <div *ngIf="film.titreVf">
+      <span>Titre VF</span>
+      <span>{{film.titreVf}}</span>
+    </div>
+    <div>
+      <span>{{film.annee}}</span>
+    </div>
+    <div>
+      <span>{{film.duree}}</span>
+    </div>
+    <div *ngIf="film.description">
+      <span>{{film.description}}</span>
+    </div>
+    <div *ngIf="film.support">
+      <span>{{film.support}}</span>
+    </div>
+    <div *ngIf="film.genre">
+      <span>{{film.genre}}</span>
+    </div>
+    <div *ngIf="film.norme">
+      <span>{{film.norme}}</span>
+    </div>
+    <div *ngIf="film.tip">
+      <span>{{film.tip}}</span>
+    </div>
+    <div *ngIf="film.source">
+      <span>{{film.source}}</span>
+    </div>
+    <div *ngIf="film.details">
+      <span *ngFor="let detail of film.details; let index; let isLast=last;">{{detail}}{{isLast ? '' : ', '}}</span>
+    </div>
+    <div *ngIf="film.pays">
+      <span *ngFor="let pay of film.pays; let index; let isLast=last;">{{pay}}{{isLast ? '' : ', '}}</span>
+    </div>
+    <div *ngIf="film.subLangs">
+      <span *ngFor="let lang of film.subLangs; let index; let isLast=last;">{{lang}}{{isLast ? '' : ', '}}</span>
+    </div>
+    <div *ngIf="film.realisateurs">
+      <span *ngFor="let rea of film.realisateurs; let index; let isLast=last;">{{rea}}{{isLast ? '' : ', '}}</span>
+    </div>
+    <div *ngIf="film.shortfilms">
+      <span *ngFor="let sf of film.shortfilms; let index; let isLast=last;">{{sf}}{{isLast ? '' : ', '}}</span>
+    </div>
+    <div *ngIf="film.themes">
+      <span *ngFor="let th of film.themes; let index; let isLast=last;">{{th}}{{isLast ? '' : ', '}}</span>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="close()" cdkFocusInitial>Fermer</button>
+  </div>
+</ng-container>
+

@@ -1,0 +1,44 @@
+<div>
+
+</div>
+<mat-form-field class="example-chip-list">
+  <mat-label>{{title}}</mat-label>
+  <mat-chip-list #chipList
+                 class="example-chip"
+                 cdkDropList
+                 cdkDropListOrientation="horizontal"
+                 (cdkDropListDropped)="drop($event)"
+                 attr.aria-label="{{title +' selection'}}">
+    <mat-chip
+      *ngFor="let element of elements"
+      cdkDrag
+      [selectable]="selectable"
+      [removable]="removable"
+      (removed)="remove(element)"
+      class="example-box">
+      {{element}}
+      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    </mat-chip>
+    <input
+      placeholder="{{placeholder}}"
+      #elementInput
+      [formControl]="elementCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [panelWidth]="250">
+    <ng-container *ngIf="limitedChoice; else directorOptions">
+      <mat-option *ngFor="let element of filteredElements | async" [value]="element">
+        <span class="code-pays-option">{{element}}</span><span class="label-pays-option">&nbsp;&nbsp;{{dataService.findLabelByCodePays(element)}}</span>
+      </mat-option>
+    </ng-container>
+    <ng-template #directorOptions>
+      <mat-option *ngFor="let element of filteredElements | async" [value]="element">
+        {{element}}
+      </mat-option>
+    </ng-template>
+
+  </mat-autocomplete>
+</mat-form-field>
