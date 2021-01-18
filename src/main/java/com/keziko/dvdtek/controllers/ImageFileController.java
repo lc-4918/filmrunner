@@ -1,7 +1,6 @@
 package com.keziko.dvdtek.controllers;
 
 import com.keziko.dvdtek.dtos.ResponseMessage;
-import com.keziko.dvdtek.entities.Dvd;
 import com.keziko.dvdtek.services.DvdService;
 import com.keziko.dvdtek.services.FileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,20 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
-/*
+/**
  * Nom de classe : ImageFileController
- * Description   :
- * Version       : 1.0
- * Date          : 18/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 18/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Slf4j
 @CrossOrigin(origins = "http://localhost:4200")
@@ -39,6 +32,11 @@ public class ImageFileController {
         this.dvdService = dvdService;
     }
 
+    /**
+     * Enregistrement de l'image dans le dossier de stockage de l'image associée à un film ("img)
+     * @param file est l'image de type {@link MultipartFile} renvoyée depuis le formulaire d'ajout et d'édition d'un film
+     * @return un objet {@link ResponseMessage} contenant le chemin d'accès à l'image stockée
+     */
     @PostMapping("/uploadFile")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = null;
@@ -67,6 +65,12 @@ public class ImageFileController {
         }
     }
 
+    /**
+     * Supprime l'image d'un film<br>
+     * Supprime l'attribut imageUrl de l'entité persistente film ayant l'attribut id égal au paramètre
+     * @param id attribut identifiant du film de type {@link Long} contenu dans l'URL
+     * @return true si l'image est bien supprimée sinon false
+     */
     @PutMapping("image/{id}")
     public ResponseEntity<Boolean> deleteImageByDvdId(@PathVariable("id") Long id) {
         Boolean result = dvdService.deleteImageByDvdId(id);

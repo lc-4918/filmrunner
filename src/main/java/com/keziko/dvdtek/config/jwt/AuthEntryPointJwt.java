@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
+/**
  * Nom de classe : AuthEntryPointJwt
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Slf4j
 @Component

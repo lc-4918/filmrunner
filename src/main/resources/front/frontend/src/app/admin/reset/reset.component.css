@@ -1,0 +1,55 @@
+.reset-card {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  background: none;
+  background: rgba(255,255,255,0.8);
+}
+.center{
+  text-align: center;
+}
+.card-title{
+  font-size: 16px;
+  font-weight: 400;
+}
+.mat-card-content{
+  margin-top: 50px;
+  text-align: center;
+  position: relative;
+}
+.content{
+  min-height: 300px;
+}
+mat-checkbox{
+  margin-left: 20px;
+}
+.import-button{
+  margin-left: 20px;
+}
+.green{
+  vertical-align: bottom;
+  color: #46a35e;
+}
+title{
+  font-size: 13px;
+  display: inline-block;
+}
+.success{
+  color: #46a35e;
+  font-weight: 400;
+}
+.fail{
+  color: #f44336;
+  font-weight: 400;
+}
+.rappel{
+  font-size: 12px;
+}
+.ml20{
+  margin-left: 20px;
+}
+.mb20{
+  margin-bottom: 20px;
+}
+/*drag drop*/
+

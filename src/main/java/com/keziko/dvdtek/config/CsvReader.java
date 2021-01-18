@@ -1,10 +1,6 @@
 package com.keziko.dvdtek.config;
 
-import com.keziko.dvdtek.dtos.XlsObject;
-import com.keziko.dvdtek.entities.Director;
-import com.keziko.dvdtek.entities.Dvd;
-import com.keziko.dvdtek.entities.Shortfilm;
-import com.keziko.dvdtek.entities.Theme;
+import com.keziko.dvdtek.dtos.json.XlsObject;
 import com.keziko.dvdtek.repositories.DirectorRepository;
 import com.keziko.dvdtek.repositories.Dvdrepository;
 import com.keziko.dvdtek.repositories.ThemeRepository;
@@ -32,34 +28,13 @@ public class CsvReader {
     @Autowired
     private static Dvdrepository dvdrepository;
 
-
-    public static Integer getLineCount(String fileLocation){
-        WorkbookSettings settings = new WorkbookSettings();
-        settings.setGCDisabled(true);
-        settings.setEncoding("ISO8859_1");
-        Workbook workbook = null;
-        int count = 0;
-        try {
-            workbook = Workbook.getWorkbook(new File(fileLocation), settings);
-            Sheet sheet = workbook.getSheet(0);
-            int rows = sheet.getRows();
-            for (int i = 1; i < rows; i++) {
-                String titreCell = sheet.getCell(2, i).getContents();
-                if (titreCell.isEmpty()){
-                    count = i;
-                }
-                i++;
-            }
-        }catch (IOException | BiffException e){
-            e.printStackTrace();
-        } finally {
-            if (workbook != null) {
-                workbook.close();
-            }
-        }
-        return count;
-    }
-
+    /**
+     * Lecture du fichier excel (XLS) déposé avec jxl
+     * La lecture est effectuée sur les colonnes définies dans la méthode et sur toutes les lignes.
+     * La lecture s'arrête à la première ligne dont la cellule est vide (cellule C*: titre)
+     * @param fileLocation chemin d'accès absolu au fichier excel (XLS)
+     * @return un objet de type {@link Object} dont les pri
+     */
     public static Object readJExcel(String fileLocation) {
 
         List<XlsObject> data = new ArrayList<>();
@@ -115,5 +90,32 @@ public class CsvReader {
             }
         }
         return data;
+    }
+
+    public static Integer getLineCount(String fileLocation){
+        WorkbookSettings settings = new WorkbookSettings();
+        settings.setGCDisabled(true);
+        settings.setEncoding("ISO8859_1");
+        Workbook workbook = null;
+        int count = 0;
+        try {
+            workbook = Workbook.getWorkbook(new File(fileLocation), settings);
+            Sheet sheet = workbook.getSheet(0);
+            int rows = sheet.getRows();
+            for (int i = 1; i < rows; i++) {
+                String titreCell = sheet.getCell(2, i).getContents();
+                if (titreCell.isEmpty()){
+                    count = i;
+                }
+                i++;
+            }
+        }catch (IOException | BiffException e){
+            e.printStackTrace();
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+        return count;
     }
 }

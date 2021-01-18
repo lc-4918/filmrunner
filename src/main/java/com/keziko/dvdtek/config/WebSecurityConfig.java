@@ -2,7 +2,6 @@ package com.keziko.dvdtek.config;
 
 import com.keziko.dvdtek.config.jwt.AuthEntryPointJwt;
 import com.keziko.dvdtek.config.jwt.AuthTokenFilter;
-import com.keziko.dvdtek.entities.ERole;
 import com.keziko.dvdtek.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +19,10 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
-/*
+/**
  * Nom de classe : SecurityConfig
- * Description   :
- * Version       : 1.0
- * Date          : 06/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 06/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Configuration
 @EnableWebSecurity

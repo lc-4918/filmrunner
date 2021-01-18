@@ -1,0 +1,107 @@
+.import-card {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  background: none;
+  background: rgba(255,255,255,0.8);
+  }
+.film-table{
+}
+.center{
+  text-align: center;
+}
+.card-title{
+  font-size: 16px;
+  font-weight: 400;
+}
+.mat-card-content{
+  margin-top: 50px;
+  text-align: center;
+  position: relative;
+}
+.content{
+min-height: 315px;
+}
+
+.counters-container{
+  top: 20px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+}
+.film-list{
+  margin-bottom: 20px;
+}
+.line-label{
+  font-size: 13px;
+  margin-left: 30px;
+  display: inline-block;
+}
+.result-container{
+  margin-top: 30px;
+}
+.import-button{
+  margin-left: 20px;
+}
+.green{
+  vertical-align: bottom;
+  color: #46a35e;
+}
+title{
+  font-size: 13px;
+  display: inline-block;
+}
+.success{
+  color: #46a35e;
+  font-weight: 400;
+}
+.fail{
+  color: #f44336;
+  font-weight: 400;
+}
+/*drag drop*/
+
+.uploadfilecontainer {
+  background-image: url("../../../assets/img/cloud.png");
+  background-repeat: no-repeat;
+  background-size: 100px;
+  background-position: center;
+  height: 200px;
+  width: 80%;
+  border: 2px dashed #3f51b5;
+  border-radius: 10px;
+  margin: 20px auto;
+}
+
+.uploadfilecontainer:hover {
+  cursor: pointer;
+  background-color: #3f51b5 !important;
+  opacity: 0.6;
+}
+
+.files-list {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 10px auto;
+  background: #ffffff;
+  border: 1px dashed;
+  border-radius: 12px;
+  padding: 5px;
+  color: #3f51b5;
+}
+
+.files-list .delete-file {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.files-list .delete-file img {
+  width: 30px;
+}
+.mat-card>.mat-card-actions:last-child{
+  margin-bottom: 20px;
+}

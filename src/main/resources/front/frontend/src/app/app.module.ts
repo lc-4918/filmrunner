@@ -21,8 +21,11 @@ import {authInterceptorProviders} from "./helpers/auth.interceptor";
 import { DeleteFilmDialogComponent } from './film-list/delete-film-dialog/delete-film-dialog.component';
 import { DisplayFilmDialogComponent } from './film-list/display-film-dialog/display-film-dialog.component';
 import { EditDirectorDialogComponent } from './film-list/edit-director-dialog/edit-director-dialog.component';
-import { ImportComponent } from './import/import.component';
+import { ImportComponent } from './admin/import/import.component';
 import { DragDropDirective } from './directives/drag-drop.directive';
+import { ResetComponent } from './admin/reset/reset.component';
+import { ExportComponent } from './admin/export/export.component';
+import { AdminComponent } from './admin/admin/admin.component';
 
 @NgModule({
   imports: [
@@ -49,7 +52,10 @@ import { DragDropDirective } from './directives/drag-drop.directive';
     DisplayFilmDialogComponent,
     EditDirectorDialogComponent,
     ImportComponent,
-    DragDropDirective
+    DragDropDirective,
+    ResetComponent,
+    ExportComponent,
+    AdminComponent
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}},

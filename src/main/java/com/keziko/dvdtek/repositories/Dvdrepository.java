@@ -1,20 +1,17 @@
 package com.keziko.dvdtek.repositories;
 
-import com.keziko.dvdtek.entities.Director;
+
 import com.keziko.dvdtek.entities.Dvd;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.SortedSet;
 
-/*
+/**
  * Nom de classe : Dvdrepository
- * Description   :
- * Version       : 1.0
- * Date          : 16/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 16/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Repository
 public interface Dvdrepository extends PagingAndSortingRepository<Dvd, Long> {
@@ -28,4 +25,6 @@ public interface Dvdrepository extends PagingAndSortingRepository<Dvd, Long> {
     List<Dvd> findAllByThemeName(String name);
 
     List<Dvd> findAllByImageUrl(String imageUrl);
+
+    List<Dvd> findAll();
 }

@@ -1,6 +1,5 @@
 package com.keziko.dvdtek.config.jwt;
 
-import com.keziko.dvdtek.config.jwt.JwtUtils;
 import com.keziko.dvdtek.services.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +9,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
+/**
  * Nom de classe : AuthTokenFilter
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {

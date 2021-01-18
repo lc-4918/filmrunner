@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {RestService} from "../services/rest.service";
 import {DataService} from "../services/data.service";
@@ -52,8 +44,12 @@ export class FilmListComponent implements OnInit, OnDestroy {
     private tokenStorageService: TokenStorageService,
     private route: ActivatedRoute,
     public dialog: MatDialog) {
+
     this.hasSubscription = true;
-    route.params.subscribe(val => {
+
+    route.params.pipe(
+      takeWhile(()=>this.hasSubscription)
+    ).subscribe(val => {
       if (val.id){
         this.realisateurId = val.id;
         this.initializeRealisateurs(val.id);
@@ -65,10 +61,12 @@ export class FilmListComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  ngOnInit():void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     // this.initializeFilms();
-    this.authService.loggedIn.pipe().subscribe(
+    this.authService.loggedIn.pipe(
+      takeWhile(()=>this.hasSubscription)
+    ).subscribe(
       res=>{
         this.isLoggedIn = res;
         const actionIsPresent =this.columnsToDisplay.includes('actions');
@@ -93,14 +91,13 @@ export class FilmListComponent implements OnInit, OnDestroy {
     this.themes = this.dataService.getThemeList();
   }
 
-  initializeFilms(){
+  initializeFilms():void{
     if (this.isLaunching){
       return;
     }
     this.isLoadingResults = true;
     console.log("initialize lancé");
     this.restService.findAllDvd().pipe(
-      //filter(()=>!this.dataService.hasFilm()),
       takeWhile(()=>this.hasSubscription),
       catchError(() => {
         this.isLoadingResults = false;
@@ -129,7 +126,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
       }
     )
   }
-  initializeRealisateurs(id: number){
+  initializeRealisateurs(id: number):void{
     this.isLoadingResults = true;
     this.restService.findDvdByDirectorId(id).pipe(
       //filter(()=>!this.dataService.hasFilm()),
@@ -162,7 +159,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
     )
   }
 
-  toggleActionColumn(){
+  toggleActionColumn():void{
     if (this.isLoggedIn){
       this.columnsToDisplay.push('actions');
     }else{
@@ -180,7 +177,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
     }
   }
 
-  applyFilter(event: Event) {
+  applyFilter(event: Event):void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.resultsLength = this.dataSource.filteredData.length ;
@@ -200,7 +197,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
     )
   }
 
-  filterByTheme(event: any, theme: string){
+  filterByTheme(event: any, theme: string):void{
     if (this.themesSelected.includes(theme)){
       const index = this.themesSelected.indexOf(theme,0);
       this.themesSelected.splice(index,1);
@@ -220,8 +217,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
         setFilms.add(film);
       }
     }
-    const filmsFiltered = Array.from(setFilms);
-    this.dataSource.data = filmsFiltered;
+    this.dataSource.data = Array.from(setFilms);
     this.resultsLength = this.dataSource.data.length;
   }
 
@@ -242,18 +238,18 @@ export class FilmListComponent implements OnInit, OnDestroy {
   }
 
 
-  editRealisateur(id: number){
+  editRealisateur(id: number):void{
     this.router.navigate(['/director/edit/',id], { relativeTo: this.route }).then();
   }
-  editFilm(id: number){
+  editFilm(id: number):void{
     this.router.navigate(['/edit/',id], { relativeTo: this.route }).then();
   }
 
-  logout() {
+  logout():void {
     this.tokenStorageService.signOut();
     window.location.reload();
   }
-  ngOnDestroy() {
+  ngOnDestroy():void {
     this.hasSubscription = false;
   }
 }

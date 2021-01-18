@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.net.URI;
 
-/*
+/**
  * Nom de classe : BrowserLauncher
- * Description   :
- * Version       : 1.0
- * Date          : 04/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 04/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
-@Slf4j
+
+/* @Slf4j
 @Component
 public class BrowserLauncher{
     @EventListener(ApplicationReadyEvent.class)
@@ -28,4 +27,4 @@ public class BrowserLauncher{
             log.error("can't launch browser");
         }
     }
-}
+}*/

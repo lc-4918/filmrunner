@@ -1,0 +1,17 @@
+.nw{
+  display: inline-block;
+  width: 50%;
+  vertical-align: middle;
+}
+.ne{
+  display: inline-block;
+  width: 50%;
+  vertical-align: middle;
+}
+.sud{
+  margin-top: 50px;
+  display: inline-block;
+  height: 50%;
+  width: 100%;
+  vertical-align: middle;
+}

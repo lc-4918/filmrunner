@@ -6,16 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
-import java.util.Objects;
 
-/*
+/**
  * Nom de classe : JwtUtils
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Slf4j
 @Component

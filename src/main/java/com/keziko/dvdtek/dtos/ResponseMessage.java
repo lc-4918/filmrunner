@@ -3,12 +3,10 @@ package com.keziko.dvdtek.dtos;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/*
+/**
  * Nom de classe : ResponseMessage
- * Description   :
- * Version       : 1.0
- * Date          : 29/12/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 29/12/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

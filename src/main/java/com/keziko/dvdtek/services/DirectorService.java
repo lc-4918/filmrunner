@@ -11,12 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.NoResultException;
 import java.util.*;
 
-/*
+/**
  * Nom de classe : DirectorService
- * Description   :
- * Version       : 1.0
- * Date          : 16/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 16/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Service
 public class DirectorService {
@@ -54,17 +52,17 @@ public class DirectorService {
                         Optional<Director> optionalDoublon = directorRepository.findById(idRealisateur);
                         if (optionalDoublon.isPresent()){
                             Director doublon = optionalDoublon.get();
-                            List<Dvd> doublonDirectorDvds = doublon.getDvds();
+                            Set<Dvd> doublonDirectorDvds = doublon.getDvds();
                             // supression des références au doublons dans tous les dvds
                             for (Dvd dvdOfDoublon : doublonDirectorDvds){
-                                List<Director> dvdDirectors = dvdOfDoublon.getDirectors();
+                                Set<Director> dvdDirectors = dvdOfDoublon.getDirectors();
                                 dvdDirectors.remove(doublon);
                                 dvdOfDoublon.setDirectors(dvdDirectors);
                                 dvdrepository.save(dvdOfDoublon);
                             }
                             Set<Dvd> directorFilms = new HashSet<>(doublonDirectorDvds);
                             directorFilms.addAll(doublon.getDvds());
-                            director.setDvds(new ArrayList<>(directorFilms));
+                            director.setDvds(new HashSet<>(directorFilms));
                             result = directorRepository.save(director);
                             directorRepository.deleteById(idRealisateur);
                         }
@@ -151,11 +149,17 @@ public class DirectorService {
         if (filmsSet.size() > 0) {
             filmList = new ArrayList<>(filmsSet);
         }
-        (Objects.requireNonNull(director)).setDvds(filmList);
+        (Objects.requireNonNull(director)).setDvds(new HashSet<>(filmList));
         director = directorRepository.save(director);
         return director.getId();
     }
 
+    /**
+     * Supprime un réalisateur {@link Director}
+     * @param id attribut identifiant unique d'un réalisateur
+     * @throws NoResultException si aucune entité persistente réalisateur n'a pour attribut id le paramètre
+     * @see com.keziko.dvdtek.controllers.DirectorController#deleteDirector(Long)
+     */
     @Transactional
     public void deleteDirectorById(Long id) throws NoResultException {
         if (directorRepository.findById(id).isPresent()) {
@@ -164,6 +168,17 @@ public class DirectorService {
             throw new NoResultException();
         }
     }
+
+    @Transactional
+    public void deleteAllDirectors(){
+        List<Director> allDirectors = findAllDirectors();
+        for (Director director : allDirectors){
+            director.setDvds(new HashSet<>());
+            directorRepository.save(director);
+        }
+        directorRepository.deleteAll();
+     }
+
     public Optional<Director> getOptionalDirectorById(Long id){
         return directorRepository.findById(id);
     }

@@ -27,6 +27,13 @@ public class ThemeController {
         this.dvdService = dvdService;
         this.themeService = themeService;
     }
+
+    /**
+     * Récupère la liste des noms de thèmes<br>
+     * Alimente les options de la balise select du formulaire d'ajout et de modification d'un film ("/add", "/edit")<br>
+     * Alimente la popup du gestionnaire de thèmes
+     * @return {@link ResponseEntity} contenant la liste des noms de thèmes de la base de données
+     */
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/theme")
     public ResponseEntity<List<String>> findAllThemeNames(){
@@ -39,6 +46,12 @@ public class ThemeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * Liste des films par thème
+     * @param id attribut identifiant unique d'une entité persistente thème de type {@link Theme}
+     * @return responseEntity liste de DTO films {@link DvdListItem}
+     */
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("theme/{id}")
     public ResponseEntity<List<DvdListItem>> getDtosByThemeId(@PathVariable("id") Long id) {
@@ -52,6 +65,12 @@ public class ThemeController {
         }
     }
 
+    /**
+     * Modifie le nom d'un thème
+     * @param name ancien nom du thème
+     * @param newName nouveau nom du thème
+     * @return responseEntity contenant l'entité persistente {@link Theme} si la modification a réussi ou bien une erreur serveur
+     */
     @RequestMapping(value = "/theme/{name}",
             produces = "application/json",
             method=RequestMethod.PUT)
@@ -65,6 +84,13 @@ public class ThemeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * Création d'un nouveau thème
+     * Méthode utilisée par la popup du gestionnaire de thèmes
+     * @param name nom du thème à créer
+     * @return responseEntity contenant <@code>true</@code> si la création a été effectuée ou bien une erreur serveur
+     */
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/theme")
     public ResponseEntity<Boolean> createTheme(@RequestBody String name){
@@ -77,6 +103,13 @@ public class ThemeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * Supprime un thème
+     * Méthode utilisée sur le bouton de suppression d'un thème dans la popup du gestionnaire de thèmes
+     * @param name nom du thème à supprimer
+     * @return responseEntity contenant <@code>true</@code> si la création a été effectuée ou bien <@code>false</@code>
+     */
     @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("theme/{name}")
     public ResponseEntity<Boolean> deleteThemeByName(@PathVariable("name") String name) {

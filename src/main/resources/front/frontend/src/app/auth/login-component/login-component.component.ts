@@ -21,14 +21,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.hasSubscription = true;
   }
 
-  ngOnInit() {
+  ngOnInit():void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
   }
 
-  onSubmit() {
+  onSubmit():void {
     this.authService.login(this.form).pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -48,13 +48,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  register(){
+  register():void{
     this.router.navigate(['/register'], { relativeTo: this.route }).then();
   }
-  reloadPage() {
+  reloadPage():void {
     window.location.reload();
   }
-  ngOnDestroy(){
+  ngOnDestroy():void{
     this.hasSubscription = false;
   }
 }

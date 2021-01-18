@@ -5,12 +5,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-/*
+/**
  * Nom de classe : Shortfilm
- * Description   :
- * Version       : 1.0
- * Date          : 27/12/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 27/12/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

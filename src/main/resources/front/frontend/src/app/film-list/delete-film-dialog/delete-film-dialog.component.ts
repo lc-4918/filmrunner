@@ -34,7 +34,7 @@ hasSubscription = false;
   ngOnInit(): void {
   }
 
-  confirmDeleteFilm(){
+  confirmDeleteFilm():void{
     this.restService.deleteDvd(this.data.idFilm).pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -51,7 +51,7 @@ hasSubscription = false;
     )
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
     this.hasSubscription = false;
   }
 

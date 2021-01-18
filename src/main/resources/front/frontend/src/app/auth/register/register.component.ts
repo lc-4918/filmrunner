@@ -1,27 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {takeWhile} from "rxjs/operators";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   form: any = {};
+  hasSubscription = false;
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService,private router: Router, private route: ActivatedRoute) { }
-
-  ngOnInit() {
+  constructor(private authService: AuthService,private router: Router, private route: ActivatedRoute) {
+    this.hasSubscription = true;
   }
 
-  onSubmit() {
-    this.authService.register(this.form).subscribe(
+  ngOnInit():void {
+  }
+
+  onSubmit():void {
+    this.authService.register(this.form).pipe(
+      takeWhile(()=>this.hasSubscription)
+    ).subscribe(
       data => {
-        console.log(data);
         this.isSuccessful = true;
         this.isSignUpFailed = false;
         this.router.navigate(['/login'], { relativeTo: this.route }).then();
@@ -31,5 +36,8 @@ export class RegisterComponent implements OnInit {
         this.isSignUpFailed = true;
       }
     );
+  }
+  ngOnDestroy():void {
+    this.hasSubscription = false;
   }
 }

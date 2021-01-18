@@ -5,7 +5,7 @@ import com.keziko.dvdtek.config.payload.JwtResponse;
 import com.keziko.dvdtek.config.payload.LoginRequest;
 import com.keziko.dvdtek.config.payload.MessageResponse;
 import com.keziko.dvdtek.config.payload.SignupRequest;
-import com.keziko.dvdtek.entities.ERole;
+import com.keziko.dvdtek.enums.ERole;
 import com.keziko.dvdtek.entities.Role;
 import com.keziko.dvdtek.entities.User;
 import com.keziko.dvdtek.repositories.RoleRepository;
@@ -26,16 +26,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/*
+/**
  * Nom de classe : UserController
- * Description   :
- * Version       : 1.0
- * Date          : 06/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 06/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("auth")
 public class AuthController {
     final AuthenticationManager authenticationManager;
 

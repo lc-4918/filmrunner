@@ -3,18 +3,15 @@ package com.keziko.dvdtek.config.payload;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-/*
+/**
  * Nom de classe : SignupRequest
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

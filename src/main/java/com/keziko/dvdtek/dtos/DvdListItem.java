@@ -2,17 +2,12 @@ package com.keziko.dvdtek.dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 
-/*
+/**
  * Nom de classe : DvdListItem
- * Description   :
- * Version       : 1.0
- * Date          : 16/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 16/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

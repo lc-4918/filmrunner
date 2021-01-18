@@ -1,0 +1,21 @@
+<mat-card class="export-card">
+  <div class="card-header">
+    <div class="center">
+      <div class="card-title"><h1>Export de la base de données</h1></div>
+    </div>
+  </div>
+  <mat-card-content>
+    <div class="content">
+     <span>Télécharger le fichier excel (XLS)</span>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <div class="button-container center">
+      <a [href]="fileUrl" download="filmrunner.xls">
+        <button mat-fab color="accent" aria-label="Example icon button with a bookmark icon">
+          <mat-icon>cloud_download</mat-icon>
+        </button>
+      </a>
+    </div>
+  </mat-card-actions>
+</mat-card>

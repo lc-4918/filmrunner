@@ -3,15 +3,12 @@ package com.keziko.dvdtek.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-/*
+/**
  * Nom de classe : DvdForm
- * Description   :
- * Version       : 1.0
- * Date          : 18/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 18/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

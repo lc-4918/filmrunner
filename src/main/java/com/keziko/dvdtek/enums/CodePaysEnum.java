@@ -3,12 +3,10 @@ package com.keziko.dvdtek.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
+/**
  * Nom de classe : CodePaysEnum
- * Description   :
- * Version       : 1.0
- * Date          : 15/03/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 15/03/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 public enum CodePaysEnum {
 

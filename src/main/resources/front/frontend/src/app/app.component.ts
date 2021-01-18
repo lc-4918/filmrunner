@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TokenStorageService} from "./services/token-storage.service";
-import {ActivatedRoute, Router, RouterEvent} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "./services/auth.service";
 import {filter, takeWhile} from "rxjs/operators";
 import {DataService} from "./services/data.service";
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy{
     this.hasSubscription = true;
   }
 
-  ngOnInit(){
+  ngOnInit():void{
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
@@ -66,25 +66,25 @@ export class AppComponent implements OnInit, OnDestroy{
     )
   }
 
-  home(){
+  home():void{
     this.router.navigate([''], {relativeTo: this.route}).then(r =>
       ()=>{
         console.log("login");
       }) ;
   }
-  import(){
-    this.router.navigate(['/import'], {relativeTo: this.route}).then(r =>
+  admin():void{
+    this.router.navigate(['/admin'], {relativeTo: this.route}).then(r =>
       ()=>{
         console.log("import");
       }) ;
   }
-  login(){
+  login():void{
     this.router.navigate(['/login'], {relativeTo: this.route}).then(r =>
       ()=>{
       console.log("login");
       }) ;
   }
-  logout() {
+  logout():void {
     this.tokenStorageService.signOut();
     this.authService.loggedIn.next(false);
     this.router.navigate([''], {relativeTo: this.route}).then(r =>
@@ -92,13 +92,13 @@ export class AppComponent implements OnInit, OnDestroy{
         console.log("logout");
       }) ;
   }
-  addFilm(){
+  addFilm():void{
     this.router.navigate(['/add'], {relativeTo: this.route}).then(r =>
       ()=>{
         console.log("ajout de film");
       }) ;
   }
-  getDirectorNameOpenDialog() {
+  getDirectorNameOpenDialog():void {
     const id = this.getId();
     this.restService.getDirectorNamebyId(id).pipe(
       takeWhile(() => this.hasSubscription)
@@ -113,7 +113,7 @@ export class AppComponent implements OnInit, OnDestroy{
     )
   }
 
-  openDialog(id: number){
+  openDialog(id: number):void{
     const dialogRef = this.dialog.open(EditDirectorDialogComponent, {
       width: '800px',
       data: {idFilm: id, name: this.directorName}
@@ -126,7 +126,7 @@ export class AppComponent implements OnInit, OnDestroy{
     });
   }
 
-  updateDirector(id: number, name: string){
+  updateDirector(id: number, name: string):void{
     this.restService.updateDirector(id,name).pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -148,7 +148,7 @@ export class AppComponent implements OnInit, OnDestroy{
     return parseInt(url[url.length-1]);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void {
     this.hasSubscription = false;
   }
 }

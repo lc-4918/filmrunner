@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/*
+/**
  * Nom de classe : LoginRequest
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Data
 @NoArgsConstructor

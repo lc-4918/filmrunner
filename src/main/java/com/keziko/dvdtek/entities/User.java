@@ -13,12 +13,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/*
+/**
  * Nom de classe : User
- * Description   :
- * Version       : 1.0
- * Date          : 06/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 06/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @NoArgsConstructor
 @Entity

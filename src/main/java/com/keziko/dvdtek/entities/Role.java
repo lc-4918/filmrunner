@@ -1,13 +1,13 @@
 package com.keziko.dvdtek.entities;
 
+import com.keziko.dvdtek.enums.ERole;
+
 import javax.persistence.*;
 
-/*
+/**
  * Nom de classe : Role
- * Description   :
- * Version       : 1.0
- * Date          : 07/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 07/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Entity
 @Table(name = "role")

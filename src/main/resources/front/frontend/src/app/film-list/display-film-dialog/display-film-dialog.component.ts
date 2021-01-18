@@ -37,7 +37,7 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
     this.getFilm();
   }
 
-  getFilm(){
+  getFilm():void{
     this.restService.findDvdById(this.data.idFilm).pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -71,7 +71,7 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
     )
   }
 
-  parseDetails(details: string){
+  parseDetails(details: string):string[]{
     const array: string[]=[];
     const inputArray = details.split(';');
     for (const input of inputArray){
@@ -93,7 +93,7 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
       return undefined;
     }
   }
-  transformPays(){
+  transformPays():void{
     if (this.filmReceived){
       if (this.filmReceived.pays && this.filmReceived.pays.length>0){
         let pays = [];
@@ -108,7 +108,7 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void{
     this.hasSubscription = false;
   }
 }

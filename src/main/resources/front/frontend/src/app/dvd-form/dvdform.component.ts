@@ -17,7 +17,7 @@ import {FilmListItem} from "../models/film-list-item";
   styleUrls: ['./dvdform.component.css']
 })
 
-export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
+export class DvdformComponent implements OnInit, OnDestroy {
   isEdit = false;
   dvdId: number |undefined;
   hasSubscription: boolean = false;
@@ -62,7 +62,9 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
     for (const detail of this.dvdDetailArray){
       this.dvdDetailMap.set(detail.id,false);
     }
-    route.params.subscribe(val => {
+    route.params.pipe(
+      takeWhile(()=>this.hasSubscription)
+    ).subscribe(val => {
       if (val.id){
         this.isEdit = true;
         this.dvdId = parseInt(val.id);
@@ -138,13 +140,9 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
     }
 
   }
-  ngOnChanges(changes:SimpleChanges){
-    // Dvd for Edit
-
-  }
 
   //DVD
-  validForm(){
+  validForm():void{
     if (this.selectedFiles){
       this.currentFile = this.selectedFiles.item(0);
     }
@@ -167,7 +165,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
       this.dataService.openSnackBar("échec de l'import de l'image","error");
     })
   }
-  createOrUpdateDvd(){
+  createOrUpdateDvd():void{
     const isUpdate: boolean = !!this.dvdId;
     this.componentDvd.details = this.dataService.convertDetailsMapToString(this.dvdDetailMap);
     this.componentDvd.description = this.hasDescription ? this.componentDvd.description : undefined;
@@ -203,7 +201,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
       );
     }
   }
-  deleteDvd(id: number){
+  deleteDvd(id: number):void{
     this.restService.deleteDvd(id).pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -229,7 +227,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   // DETAILS
-  detailToggleChanged(event: any, id: number){
+  detailToggleChanged(event: any, id: number):void{
     const previousState = this.dvdDetailMap.get(id);
     const currentState = previousState==undefined ? true : !previousState;
     this.dvdDetailMap.set(id,currentState)
@@ -240,7 +238,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   // CHIPS
-  setChipData(event: string[],category: string){
+  setChipData(event: string[],category: string):void{
     switch (category){
       case 'realisateurs':
         this.componentDvd.realisateurs = event;
@@ -262,7 +260,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
   // COURT-METRAGE
   formValues = this.shortfilmForm.getRawValue();
   arrayValues = (this.shortfilmForm.get('shortfilmTab') as FormArray).getRawValue();
-  addShortfilm(){
+  addShortfilm():void{
     const group = this.fb.group({
       cmName: '',
     },{updateOn: 'blur'});
@@ -327,7 +325,7 @@ export class DvdformComponent implements OnInit, OnChanges, OnDestroy {
       return '';
     }
   }
-  deleteFile(){
+  deleteFile():void{
     if (this.componentDvd.imageUrl){
       this.componentDvd.imageUrl = undefined;
       if (this.dvdId){

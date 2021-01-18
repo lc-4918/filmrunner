@@ -1,0 +1,41 @@
+<mat-card class="reset-card">
+  <div class="card-header">
+    <div class="center">
+      <div class="card-title"><h1>Réinitialiser la base de données</h1></div>
+    </div>
+  </div>
+  <form
+    name="form"
+    (ngSubmit)="f.form.valid"
+    #f="ngForm"
+    novalidate
+  >
+    <mat-card-content>
+      <div class="content">
+        <div *ngIf="!hasSucceed">
+          <span>En cochant ici vous supprimerez toutes les films, court-métrages, réalisateurs et thèmes du film</span>
+          <mat-checkbox [(ngModel)]="toClean" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+        </div>
+        <div class="rappel mt20">
+          <span>Les listes de détails, supports, normes, etc, ne {{hasSucceed? ' sont ': ' seront '}} pas supprimées</span>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="form-group center mb20">
+        <div
+          role="alert"
+          *ngIf="f.submitted"
+          [className]="hasSucceed ? 'success' : 'fail'"
+        >
+          {{ messageResponse }}
+        </div>
+      </div>
+      <div class="center">
+        <button mat-raised-button (click)="return()" color="link">Retour</button>
+        <button mat-raised-button *ngIf="toClean && !hasSucceed" class="ml20" (click)="resetAll()" color="accent">Confirmer</button>
+      </div>
+
+    </mat-card-actions>
+  </form>
+</mat-card>

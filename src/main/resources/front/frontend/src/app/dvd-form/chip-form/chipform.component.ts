@@ -1,11 +1,11 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Output, ViewChild, EventEmitter, OnDestroy} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import {map, startWith, takeWhile} from 'rxjs/operators';
 import {DataService} from "../../services/data.service";
 
 /**
@@ -16,13 +16,14 @@ import {DataService} from "../../services/data.service";
   templateUrl: 'chipform.component.html',
   styleUrls: ['chipform.component.css'],
 })
-export class ChipformComponent implements OnInit{
+export class ChipformComponent implements OnInit, OnDestroy{
   @Input() title: string | undefined;
   @Input() placeholder: string | undefined;
   @Input() listOfElements: any[];
   @Input() elements: string[] = [];
   @Input() limitedChoice: boolean | undefined;
   @Output() elementsEmitter = new EventEmitter<string[]>();
+  hasSubscription = false;
   panelClass = "panel-class";
   visible = true;
   selectable = true;
@@ -36,11 +37,13 @@ export class ChipformComponent implements OnInit{
 
   constructor(public dataService: DataService) {
     this.listOfElements=[];
+    this.hasSubscription = true;
   }
 
-  ngOnInit() {
+  ngOnInit():void {
     this.filteredElements = this.elementCtrl.valueChanges.pipe(
       startWith(null),
+      takeWhile(()=>this.hasSubscription),
       map((element: string | null) => element ? this._filter(element) : this.listOfElements.slice()));
   }
 
@@ -88,7 +91,8 @@ export class ChipformComponent implements OnInit{
     this.elementInput.nativeElement.value = '';
     this.elementCtrl.setValue(null);
   }
-  drop(event: CdkDragDrop<string[]>) {
+
+  drop(event: CdkDragDrop<string[]>):void {
     moveItemInArray(this.elements, event.previousIndex, event.currentIndex);
     // emit after drop
     this.elementsEmitter.emit(this.elements);
@@ -96,7 +100,6 @@ export class ChipformComponent implements OnInit{
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     if (this.limitedChoice){
       const searchByLabel = this.dataService.findLabelsContaining(filterValue)
       const searchByCode = this.listOfElements.filter(element => element.toLowerCase().indexOf(filterValue) === 0);
@@ -106,11 +109,8 @@ export class ChipformComponent implements OnInit{
     }else{
       return this.listOfElements.filter(element => element.toLowerCase().includes(filterValue));
     }
-
+  }
+  ngOnDestroy():void {
+    this.hasSubscription=false;
   }
 }
-
-
-/**  Copyright 2020 Google LLC. All Rights Reserved.
- Use of this source code is governed by an MIT-style license that
- can be found in the LICENSE file at http://angular.io/license */

@@ -5,13 +5,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
-/*
+/**
  * Nom de classe : ThemeList
- * Description   :
- * Version       : 1.0
- * Date          : 27/12/2020
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 27/12/2020
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @NoArgsConstructor
 @Data
@@ -25,7 +24,7 @@ public class Theme {
 
     @ManyToMany(fetch = FetchType.LAZY,
             mappedBy = "themes")
-    private List<Dvd> dvds;
+    private Set<Dvd> dvds;
 
     private String name;
 
@@ -33,7 +32,7 @@ public class Theme {
         this.name = name;
     }
 
-    public Theme(String name, List<Dvd> dvds) {
+    public Theme(String name, Set<Dvd> dvds) {
         this.name = name;
         this.dvds = dvds;
     }

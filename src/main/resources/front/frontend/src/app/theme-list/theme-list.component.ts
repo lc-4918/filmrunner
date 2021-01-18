@@ -13,9 +13,8 @@ export class ThemeListComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  open(){
+  open():void{
     this.dialog.open(ThemeDialog, {
-      //data: { name: 'austin' },
     });
   }
 }

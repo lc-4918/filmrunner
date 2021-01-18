@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import  *  as  codePays  from  '../models/codealpha2_fr.json';
 import  *  as  enums  from  '../models/enums.json';
 import { DvdForm } from '../models/dvd-form';
-import {FilmListItem} from "../models/film-list-item";
-import {JsonItem} from "../models/json-item";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {PaysItem} from "../models/pays-item";
-import {DomSanitizer} from "@angular/platform-browser";
-import {BehaviorSubject, Subject} from "rxjs";
+import {FilmListItem} from '../models/film-list-item';
+import {JsonItem} from '../models/json-item';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {PaysItem} from '../models/pays-item';
+import {BehaviorSubject} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +21,7 @@ export class DataService {
   imageDirectory: string |undefined;
   directorSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(private _snackBar: MatSnackBar, private sanitized: DomSanitizer) {
+  constructor(private _snackBar: MatSnackBar) {
     for (const property in this.json) {
       const code = property;
       const label = (this.json)[property];
@@ -100,7 +99,7 @@ export class DataService {
 
   // CODE-PAYS MANAGEMENT
   transformCodesToPaysLabels(listeString: string):string{
-    const codeArray: string[] = listeString.split(";");
+    const codeArray: string[] = listeString.split(';');
     const array: string[] = [];
     for (const code of codeArray){
       const label = this.findLabelByCodePays(code);
@@ -125,7 +124,7 @@ export class DataService {
   // DETAILS MANAGEMENT
   createDetailsMap(dvd: DvdForm):Map<number,boolean>{
     let result : Map<number,boolean> = new Map<number,boolean>();
-    const detailsArray = dvd.details && dvd.details.length>0? dvd.details?.split(";"): [];
+    const detailsArray = dvd.details && dvd.details.length>0? dvd.details?.split(';'): [];
     for (const detail of this.detailsObject){
       result.set(detail.id,detailsArray.indexOf(detail.id.toString())>-1);
     }
@@ -160,6 +159,6 @@ export class DataService {
         result.push(k);
       }
     });
-    return result.join(";");
+    return result.join(';');
   }
 }

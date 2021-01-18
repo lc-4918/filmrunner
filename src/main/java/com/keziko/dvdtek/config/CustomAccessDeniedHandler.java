@@ -5,18 +5,15 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/*
+/**
  * Nom de classe : CustomAccessDeniedHandler
- * Description   :
- * Version       : 1.0
- * Date          : 09/01/2021
- * Copyright     : Luc CLÉMENT - lucclement38@gmail.com
+ * @version 09/01/2021
+ * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {

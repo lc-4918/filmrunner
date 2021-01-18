@@ -1,11 +1,10 @@
-import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {RestService} from "../../services/rest.service";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent,MatAutocomplete} from "@angular/material/autocomplete";
-import {map, startWith, take, takeWhile} from "rxjs/operators";
+import {map, startWith, takeWhile} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 
@@ -30,7 +29,7 @@ export class ThemeDialog implements OnInit, OnDestroy {
   @ViewChild('elementInput') elementInput: ElementRef<HTMLInputElement> | undefined;
   @ViewChild('auto') matAutocomplete: MatAutocomplete | undefined;
 
-  constructor(/*@Inject(MAT_DIALOG_DATA) public themes: string[],*/private dataService: DataService, private  restService: RestService) {
+  constructor(private dataService: DataService, private  restService: RestService) {
     this.themes = this.dataService.getThemeList();
     this.hasSubscription = true;
   }
@@ -76,7 +75,7 @@ export class ThemeDialog implements OnInit, OnDestroy {
     this.elementCtrl.setValue(null);
   }
 
-  update(){
+  update():void{
     this.selectedThemes[0] = this.currentValue;
     const oldValindex = this.dataService.themeList.indexOf(this.oldValue);
     if (oldValindex>=0){
@@ -100,7 +99,6 @@ export class ThemeDialog implements OnInit, OnDestroy {
 
   remove(element: string): void {
     const index = this.themes.indexOf(element);
-    const indexList = this.dataService.getThemeList().indexOf(element);
     if (index >= 0) {
       this.restService.deleteTheme(element).pipe(
         takeWhile(()=>this.hasSubscription)
@@ -148,7 +146,7 @@ export class ThemeDialog implements OnInit, OnDestroy {
     // @ts-ignore
     return this.themes.filter(element => element.toLowerCase().indexOf(filterValue) === 0);
   }
-  checkPlaceHolder() {
+  checkPlaceHolder():void {
     if (this.inputPlaceholder) {
       this.inputPlaceholder = null
       return;
@@ -157,7 +155,7 @@ export class ThemeDialog implements OnInit, OnDestroy {
       return
     }
   }
-  ngOnDestroy(){
+  ngOnDestroy():void{
     this.hasSubscription = false;
   }
 }
