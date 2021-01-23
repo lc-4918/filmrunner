@@ -20,7 +20,7 @@ directorName: string | undefined;
   onNoClick(): void {
     this.dialogRef.close();
   }
-  ngOnDestroy() {
+  ngOnDestroy():void {
     this.hasSubscription = false;
   }
 }

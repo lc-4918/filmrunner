@@ -1,5 +1,7 @@
 package com.keziko.dvdtek.controllers;
+
 import com.keziko.dvdtek.dtos.DvdListItem;
+import com.keziko.dvdtek.dtos.ThemeDTO;
 import com.keziko.dvdtek.entities.Theme;
 import com.keziko.dvdtek.services.DvdService;
 import com.keziko.dvdtek.services.ThemeService;
@@ -36,9 +38,10 @@ public class ThemeController {
      */
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/theme")
-    public ResponseEntity<List<String>> findAllThemeNames(){
+    public ResponseEntity<List<ThemeDTO>> findAllThemeNames(){
         try{
-            List<String> result = themeService.findAllThemeNames();
+            log.info("GET /theme");
+            List<ThemeDTO> result = themeService.findAllThemes();
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }catch(Exception e){
             log.error(e.getMessage());
@@ -56,6 +59,7 @@ public class ThemeController {
     @GetMapping("theme/{id}")
     public ResponseEntity<List<DvdListItem>> getDtosByThemeId(@PathVariable("id") Long id) {
         try {
+            log.info("GET /theme/id | id = {}",id);
             List<DvdListItem> dtos = dvdService.findDtosByThemeId(id);
             return ResponseEntity.status(HttpStatus.OK).body(dtos);
         } catch (NoResultException e) {
@@ -74,10 +78,12 @@ public class ThemeController {
     @RequestMapping(value = "/theme/{name}",
             produces = "application/json",
             method=RequestMethod.PUT)
-    public ResponseEntity<Theme> updateThemeName(@PathVariable("name") String name, @RequestBody String  newName){
+    public ResponseEntity<ThemeDTO> updateThemeName(@PathVariable("name") String name, @RequestBody String  newName){
         try{
+            log.info("PUT /theme/id | name = {}, newName = {}",name,newName);
             Theme theme = themeService.updateTheme(name,newName);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(theme);
+            ThemeDTO themeDTO = new ThemeDTO(theme.getName(),theme.getColor());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(themeDTO);
         }catch(Exception e){
             log.error(e.getMessage());
             e.printStackTrace();
@@ -88,14 +94,16 @@ public class ThemeController {
     /**
      * Création d'un nouveau thème
      * Méthode utilisée par la popup du gestionnaire de thèmes
-     * @param name nom du thème à créer
+     * méthode PUT {@code RestService#createTheme}
+     * @param theme est le {@link ThemeDTO} contenant le nom et la couleur du {@link Theme} à créer
      * @return responseEntity contenant <@code>true</@code> si la création a été effectuée ou bien une erreur serveur
      */
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/theme")
-    public ResponseEntity<Boolean> createTheme(@RequestBody String name){
+    public ResponseEntity<Theme> createTheme(@RequestBody ThemeDTO theme){
         try{
-            Boolean result = themeService.createTheme(name);
+            log.info("PUT /theme | name = {}",theme);
+            Theme result = themeService.createTheme(theme.getName(),theme.getColor());
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }catch(Exception e){
             log.error(e.getMessage());
@@ -114,6 +122,7 @@ public class ThemeController {
     @DeleteMapping("theme/{name}")
     public ResponseEntity<Boolean> deleteThemeByName(@PathVariable("name") String name) {
         try {
+            log.info("DELETE /theme | name = {}",name);
             themeService.deleteTheme(name);
             return ResponseEntity.status(HttpStatus.OK).body(true);
         } catch (Exception e) {

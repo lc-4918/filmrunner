@@ -7,6 +7,7 @@ import {MatAutocompleteSelectedEvent,MatAutocomplete} from "@angular/material/au
 import {map, startWith, takeWhile} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {Theme} from "../../models/theme";
 
 @Component({
   selector: 'app-theme-dialog',
@@ -15,16 +16,16 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 })
 export class ThemeDialog implements OnInit, OnDestroy {
   hasSubscription: boolean = false;
-  themes: string[] = [];
-  currentValue: string = '';
-  oldValue: string = '';
+  themes: Theme[] = [];
+  currentValue: Theme | undefined;
+  oldValue: string | undefined;
   visible = true;
   addOnBlur = true;
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredElements: Observable<string[]> | undefined;
-  inputPlaceholder: string|null = "Nouveau thème..."
+  filteredElements: Observable<Theme[]> | undefined;
+  inputPlaceholder: string|undefined;
 
   @ViewChild('elementInput') elementInput: ElementRef<HTMLInputElement> | undefined;
   @ViewChild('auto') matAutocomplete: MatAutocomplete | undefined;
@@ -36,13 +37,13 @@ export class ThemeDialog implements OnInit, OnDestroy {
   elementCtrl = new FormControl();
 
   ngOnInit(): void {
-    this.filteredElements = this.elementCtrl.valueChanges.pipe(
+/*    this.filteredElements = this.elementCtrl.valueChanges.pipe(
       takeWhile(()=>this.hasSubscription),
       startWith(null),
-      map((element: string | null) => element ? this._filter(element) : this.themes.slice()));
+      map((element: Theme | null) => element ? this._filter(element) : this.themes.slice()));*/
   }
 
-  selectedThemes: any[] = [];
+  selectedThemes: Theme[] = [];
 
   isSelected(theme: any): boolean {
     const index = this.selectedThemes.indexOf(theme);
@@ -58,8 +59,8 @@ export class ThemeDialog implements OnInit, OnDestroy {
       this.restService.createTheme(value).pipe(
         takeWhile(()=>this.hasSubscription)
       ).subscribe(
-        ()=>{
-          this.themes.push(value.trim());
+        (res)=>{
+          this.themes.push(res);
           this.dataService.setThemeList(this.themes);
           this.dataService.openSnackBar("thème créé","success");
         },
@@ -76,31 +77,32 @@ export class ThemeDialog implements OnInit, OnDestroy {
   }
 
   update():void{
-    this.selectedThemes[0] = this.currentValue;
-    const oldValindex = this.dataService.themeList.indexOf(this.oldValue);
-    if (oldValindex>=0){
-      this.restService.updateTheme(this.oldValue,this.currentValue).pipe(
-        takeWhile(()=>this.hasSubscription)
-      ).subscribe(
-        ()=>{
-          this.themes = this.dataService.getThemeList();
-          const index = this.themes.indexOf(this.oldValue);
-          this.themes[index]=this.currentValue;
-          this.selectedThemes.splice(0, 1);
-          this.currentValue ="";
-          this.dataService.openSnackBar("thème mis à jour","success");
-        },
-        ()=>{
-          this.dataService.openSnackBar("échec de la mise à jour du thème","error");
-        }
-      )
+    if (this.currentValue && this.oldValue){
+      this.selectedThemes[0] = this.currentValue;
+
+          this.restService.updateTheme(this.oldValue,this.currentValue.name).pipe(
+            takeWhile(()=>this.hasSubscription)
+          ).subscribe(
+            (res)=>{
+              this.dataService.openSnackBar("thème mis à jour","success");
+              if (this.currentValue && this.oldValue){
+                this.dataService.replaceTheme(this.oldValue,res);
+                this.selectedThemes.splice(0, 1);
+                this.currentValue =undefined;
+              }
+              this.dataService.openSnackBar("thème mis à jour","success");
+            },
+            ()=>{
+              this.dataService.openSnackBar("échec de la mise à jour du thème","error");
+            }
+          )
     }
   }
 
-  remove(element: string): void {
+  remove(element: Theme): void {
     const index = this.themes.indexOf(element);
     if (index >= 0) {
-      this.restService.deleteTheme(element).pipe(
+      this.restService.deleteTheme(element.name).pipe(
         takeWhile(()=>this.hasSubscription)
       ).subscribe(
         ()=>{
@@ -115,7 +117,7 @@ export class ThemeDialog implements OnInit, OnDestroy {
     }
   }
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.themes.push(event.option.viewValue);
+    this.themes.push(event.option.value);
     // @ts-ignore
     this.elementInput.nativeElement.value = '';
     this.elementCtrl.setValue(null);
@@ -123,14 +125,13 @@ export class ThemeDialog implements OnInit, OnDestroy {
 
   toggleTheme(theme: any): void {
     let index = this.selectedThemes.indexOf(theme);
-    let indexList = this.dataService.themeList.indexOf(theme);
     if (index >= 0) {
       this.removable = true;
       this.selectedThemes.splice(index, 1);
-      this.currentValue ="";
+      this.currentValue =undefined;
     } else {
       this.removable = false;
-      this.oldValue = theme;
+      this.oldValue = theme.name;
       this.currentValue = theme;
       if (this.selectedThemes.length==0){
         this.selectedThemes.push(theme);
@@ -141,20 +142,30 @@ export class ThemeDialog implements OnInit, OnDestroy {
     }
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  private _filter(value: Theme): string[] {
+    const filterValue = value.name.toLowerCase();
     // @ts-ignore
-    return this.themes.filter(element => element.toLowerCase().indexOf(filterValue) === 0);
+    return this.themes.filter(element => element.name.toLowerCase().indexOf(filterValue) === 0);
   }
   checkPlaceHolder():void {
     if (this.inputPlaceholder) {
-      this.inputPlaceholder = null
+      this.inputPlaceholder = undefined
       return;
     } else {
       this.inputPlaceholder = 'Nouveau thème...'
       return
     }
   }
+  getColor(theme: Theme):string{
+    if (theme.color){
+      const isLightBackground = this.dataService.isLight(theme.color);
+      return isLightBackground? 'rgba(0,0,0,.87)':'rgb(255,255,255)';
+    }else {
+      return 'rgba(0,0,0,.87)';
+    }
+  }
+
+
   ngOnDestroy():void{
     this.hasSubscription = false;
   }

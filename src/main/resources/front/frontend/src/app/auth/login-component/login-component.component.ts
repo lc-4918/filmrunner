@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {TokenStorageService} from "../../services/token-storage.service";
-import {ActivatedRoute, Router, RouterEvent} from "@angular/router";
-import {filter, takeUntil, takeWhile} from "rxjs/operators";
+import {ActivatedRoute, Router} from "@angular/router";
+import {takeWhile} from "rxjs/operators";
 
 @Component({
   selector: 'app-login-component',
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate([''], { relativeTo: this.route }).then();
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.error;
         this.isLoginFailed = true;
       }
     );

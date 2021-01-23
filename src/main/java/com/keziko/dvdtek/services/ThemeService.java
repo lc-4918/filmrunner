@@ -1,6 +1,7 @@
 package com.keziko.dvdtek.services;
 
 import com.keziko.dvdtek.controllers.ThemeController;
+import com.keziko.dvdtek.dtos.ThemeDTO;
 import com.keziko.dvdtek.entities.Theme;
 import com.keziko.dvdtek.repositories.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,10 @@ public class ThemeService {
      * @return liste de <@code>String</@code> des noms de thèmes
      * @see ThemeController#findAllThemeNames()
      */
-    public List<String> findAllThemeNames() {
+    public List<ThemeDTO> findAllThemes() {
         List<Theme> themes = themeRepository.findAll();
         if (Objects.nonNull(themes) && !themes.isEmpty()) {
-            return themes.stream().map(Theme::getName).collect(Collectors.toList());
+            return themes.stream().map(th->new ThemeDTO(th.getName(),th.getColor())).collect(Collectors.toList());
         } else {
             return new ArrayList<>();
         }
@@ -47,15 +48,13 @@ public class ThemeService {
      * @return <@code>true</@code> si la persistence est réussie sinon false
      */
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_UNCOMMITTED)
-    public boolean createTheme(String name){
-        boolean result = false;
-        Theme _optional = findByName(name);
-        if (Objects.isNull(_optional)){
-                Theme newTheme = new Theme(name);
-                themeRepository.save(newTheme);
-                result = true;
+    public Theme createTheme(String name, String color){
+        Optional<Theme> _optional = themeRepository.findThemeByName(name);
+        if (!_optional.isPresent()){
+                Theme newTheme = new Theme(name, color);
+                return themeRepository.save(newTheme);
         }
-        return result;
+        return null;
     }
 
     /**
@@ -95,8 +94,4 @@ public class ThemeService {
         themeRepository.deleteAll();
     }
 
-    private Theme findByName(String name){
-        Optional<Theme> optTheme = themeRepository.findThemeByName(name);
-        return optTheme.orElse(null);
-    }
 }

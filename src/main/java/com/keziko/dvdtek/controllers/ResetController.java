@@ -43,11 +43,12 @@ public class ResetController {
      */
     @GetMapping("/reset/cleandb")
     public ResponseEntity<ResponseMessage> cleandb(){
-        ResponseMessage message = null;
+        ResponseMessage message;
         try{
+            log.info("GET /reset/cleandb");
             dvdService.deleteAllDvdsDirectorsThemesAndShortFilm();
 
-            message = new ResponseMessage("nettoyage de la base de données réussie",true);
+            message = new ResponseMessage("Nettoyage de la base de données réussie",true);
             return ResponseEntity.status(HttpStatus.OK).body(message);
         }catch (Exception e){
             message = new ResponseMessage(e.getMessage(),false);

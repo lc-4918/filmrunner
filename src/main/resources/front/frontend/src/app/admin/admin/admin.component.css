@@ -1,17 +1,18 @@
-.nw{
+.container{
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 50%;
+  width: 1500px;
+}
+.item{
   display: inline-block;
-  width: 50%;
   vertical-align: middle;
 }
-.ne{
-  display: inline-block;
-  width: 50%;
-  vertical-align: middle;
+.container .item:first-child{
+  margin-right: 20px;
 }
-.sud{
-  margin-top: 50px;
-  display: inline-block;
-  height: 50%;
-  width: 100%;
-  vertical-align: middle;
+.container .item:last-child{
+  margin-left: 20px;
 }

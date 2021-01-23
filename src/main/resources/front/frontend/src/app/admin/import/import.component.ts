@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RestService} from "../../services/rest.service";
 import {filter, takeWhile} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DataService} from "../../services/data.service";
 
 @Component({
   selector: 'app-import',
@@ -20,7 +21,7 @@ export class ImportComponent implements OnInit, OnDestroy {
   isNotExcel: boolean | undefined;
   hasExcelFile: boolean | undefined;
 
-  constructor(private restService: RestService,private router: Router,private route: ActivatedRoute) {
+  constructor(private restService: RestService,private router: Router,private route: ActivatedRoute, private dataService: DataService) {
     this.hasSubscription = true;
   }
 
@@ -53,6 +54,8 @@ export class ImportComponent implements OnInit, OnDestroy {
       },
       error => {
         this.isProcessing= false;
+        clearInterval(this.interval);
+        this.dataService.openSnackBar("impossible d'importer le fichier excel","error");
       }
     )
   }
@@ -63,11 +66,20 @@ export class ImportComponent implements OnInit, OnDestroy {
 
   getCounter():void{
     this.restService.getImportedLineCount().pipe(
-      takeWhile(()=>this.hasSubscription)
+      takeWhile(()=>this.hasSubscription && this.isProcessing)
     ).subscribe(
       res=>{
-        this.linesImported = res.count;
-        this.importedTitle = res.message;
+        if (res){
+          if (res.count){
+            this.linesImported = res.count;
+          }
+          if (res.message){
+            this.importedTitle = res.message;
+          }
+        }
+      },
+      (error)=>{
+        clearInterval(this.interval);
       }
     )
   }

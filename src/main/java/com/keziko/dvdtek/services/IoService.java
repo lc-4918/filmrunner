@@ -1,6 +1,5 @@
 package com.keziko.dvdtek.services;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keziko.dvdtek.dtos.ResponseMessage;
 import com.keziko.dvdtek.dtos.json.XlsObject;
@@ -13,13 +12,19 @@ import jxl.Workbook;
 import jxl.format.Colour;
 import jxl.write.*;
 import jxl.write.Number;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +33,7 @@ import java.util.stream.Collectors;
  * @version 18/01/2021
  * @author Luc CLÉMENT - lucclement38@gmail.com
  */
+@Slf4j
 @Service
 public class IoService {
 
@@ -37,14 +43,21 @@ public class IoService {
     private final ThemeRepository themeRepository;
     private final ShortfilmRepository shortfilmRepository;
     private ResponseMessage intervalMessage;
+    private final ResourceLoader resourceLoader;
+    @Value("${film.app.excelFolder:/data}")
+    private String excelFolder;
+
+    @Value("${film.app.excelFilename:enums.json}")
+    private String excelFilename;
 
     @Autowired
-    public IoService(DirectorRepository directorRepository, Dvdrepository dvdrepository, RoleRepository roleRepository, ThemeRepository themeRepository, ShortfilmRepository shortfilmRepository) {
+    public IoService(DirectorRepository directorRepository, Dvdrepository dvdrepository, RoleRepository roleRepository, ThemeRepository themeRepository, ShortfilmRepository shortfilmRepository, ResourceLoader resourceLoader) {
         this.directorRepository = directorRepository;
         this.dvdrepository = dvdrepository;
         this.roleRepository = roleRepository;
         this.themeRepository = themeRepository;
         this.shortfilmRepository = shortfilmRepository;
+        this.resourceLoader = resourceLoader;
     }
 
 
@@ -69,7 +82,7 @@ public class IoService {
      * transforme la ligne du fichier {@link XlsObject} en dvd, réalisateurs, court-métrage et thème
      * @param object DTO de type {@link XlsObject} dont les propriétés nommées ont été importées depuis le contenu des cellules du fichier excel (XLS)
      * @see com.keziko.dvdtek.config.CsvReader#readJExcel(String fileLocation)
-     * @see IoService#importXLS(List XlsObjects)
+     * @see IoService#importXLS(List)
      */
     @Transactional
     public void importXLSLine(XlsObject object){
@@ -100,7 +113,6 @@ public class IoService {
                 format = 1; // LM
                 break;
         }
-        Integer tip = format;
 
         // TYPE
         // le genre est devenu "type"
@@ -119,64 +131,60 @@ public class IoService {
             default:
                 type = 3; // FIC
         }
-        Integer genre = type;
 
         // NORME
         String objectNorme = object.getNorme();
-        int normeInt;
+        int norme;
         if ("NTSC".equalsIgnoreCase(objectNorme)) {
-            normeInt = 1;
+            norme = 1;
         } else {
-            normeInt = 2;
+            norme = 2;
         }
-        Integer norme = normeInt;
 
         // SUPPORT
         String objectSupport = object.getSupport();
-        int supportInt;
+        int support;
         switch(objectSupport.toUpperCase()){
             case "XRIP":
-                supportInt = 1;
+                support = 1;
                 break;
             case "720P":
-                supportInt = 2;
+                support = 2;
                 break;
             case "1080":
-                supportInt = 3;
+                support = 3;
                 break;
             case "DVD9":
-                supportInt = 5;
+                support = 5;
                 break;
             case "BD-R":
-                supportInt = 6;
+                support = 6;
                 break;
             default:
-                supportInt = 4; //DVD5
+                support = 4; //DVD5
                 break;
         }
-        Integer support = supportInt;
 
         // SOURCE
         String objectSource = object.getSource();
-        int sourceInt;
+        int source;
         switch (objectSource.toUpperCase()){
             case "VOD":
-                sourceInt = 2;
+                source = 2;
                 break;
             case "WEB":
-                sourceInt = 3;
+                source = 3;
                 break;
             case "TV":
-                sourceInt = 4;
+                source = 4;
                 break;
             case "VHS":
-                sourceInt = 5;
+                source = 5;
                 break;
             default:
-                sourceInt = 1; //DVD
+                source = 1; //DVD
                 break;
         }
-        Integer source = sourceInt;
 
         // DETAILS
         String objectDetails = object.getDetails().toUpperCase();
@@ -258,7 +266,7 @@ public class IoService {
         }
 
         // LANGUES
-        String objectSubLangs = object.getSub().toUpperCase();
+        String objectSubLangs = object.getSub().isEmpty()? null:object.getSub().toUpperCase();
         String subLangs = objectSubLangs.replace("-",";");
         if (subLangs.contains("FR")){
             isVostFr = true;
@@ -272,13 +280,15 @@ public class IoService {
         String objectThemes = object.getThemes();
         String[] themesarray = objectThemes.split("-");
         Set<Theme> themes = new HashSet<>();
+        Random r = new Random();
         for (String themeString : themesarray){
             if (!themeString.isEmpty()){
                 Optional<Theme> optionalTheme = themeRepository.findThemeByName(themeString);
                 if (optionalTheme.isPresent()){
                     themes.add(optionalTheme.get());
                 }else{
-                    Theme newTheme = themeRepository.save(new Theme(themeString));
+
+                    Theme newTheme = themeRepository.save(new Theme(themeString,IoService.generateColor(r)));
                     themes.add(newTheme);
                 }
             }
@@ -286,7 +296,7 @@ public class IoService {
             if (Arrays.binarySearch(themesarray, "vostfr")<0 && isVostFr){
                 Optional<Theme> optionalTheme = themeRepository.findThemeByName("vostfr");
                 if (!optionalTheme.isPresent()){
-                    Theme newTheme = themeRepository.save(new Theme("vostfr"));
+                    Theme newTheme = themeRepository.save(new Theme("vostfr",IoService.generateColor(r)));
                     themes.add(newTheme);
                 }else{
                     themes.add(optionalTheme.get());
@@ -343,20 +353,18 @@ public class IoService {
      * @throws IOException si la méthode {@link ObjectMapper#readValue(File, Class) échoue}
      * @throws WriteException si la sous-méthode {@link IoService#createXlsLine(int, ListeObject, WritableSheet, Dvd)}
      */
-    public File createExcel() throws IOException, WriteException {
-        File currDir = new File("");
-        String fileLocation = currDir.getAbsolutePath() + "temp.xls";
-        File newFile = new File(fileLocation);
+    public File createExcel(ListeObject listes) throws IOException, WriteException {
+        File newFile = new File("temp.xls");
+        log.info("writing excel : {}",newFile.getAbsolutePath());
         WritableWorkbook workbook = Workbook.createWorkbook(newFile);
+        workbook.setColourRGB(Colour.LIGHT_ORANGE,253, 233, 217);
+        workbook.setColourRGB(Colour.LIGHT_BLUE,229, 224, 236);
         WritableSheet sheet = workbook.createSheet("Sheet 1", 0);
         defineHeaders(sheet);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        ListeObject listesObject = mapper.readValue(new File("src/main/resources/static/enums.json"), ListeObject.class);
         List<Dvd> dvds = dvdrepository.findAll();
         int index = 1;
         for (Dvd dvd : dvds){
-            createXlsLine(index,listesObject, sheet, dvd);
+            createXlsLine(index,listes, sheet, dvd);
             index++;
         }
         for (int i = 0; i<20; i++){
@@ -467,6 +475,7 @@ public class IoService {
 
     private void createXlsLine(int lineIndex, ListeObject listeObject, WritableSheet sheet, Dvd dvd) throws WriteException {
         WritableCellFormat cellFormat = new WritableCellFormat();
+
         if (lineIndex % 2 ==0){
             cellFormat.setBackground(Colour.LIGHT_ORANGE);
         }else{
@@ -504,10 +513,11 @@ public class IoService {
         sheet.addCell(cellNumber);
 
         String directors = dvd.getDirectors().stream().map(Director::getName).collect(Collectors.joining(", "));
+        String directorIds = dvd.getDirectors().stream().map(director -> director.getId().toString()).collect(Collectors.joining("-"));
         cellLabel = new Label(4, lineIndex, directors, cellFormat);
         sheet.addCell(cellLabel);
 
-        cellLabel = new Label(5, lineIndex, null, cellFormat);
+        cellLabel = new Label(5, lineIndex, directorIds, cellFormat);
         sheet.addCell(cellLabel);
 
         String pays = dvd.getPays().replace(";","-");
@@ -550,12 +560,23 @@ public class IoService {
         cellLabel = new Label(14, lineIndex, themes, cellFormat);
         sheet.addCell(cellLabel);
 
+        WritableCellFormat cmCellFormat = new WritableCellFormat();
+        if (lineIndex % 2 ==0){
+            cmCellFormat.setBackground(Colour.LIGHT_BLUE);
+        }else{
+            cmCellFormat.setBackground(Colour.WHITE);
+        }
         int colIndex = 15;
-        for (Shortfilm sf : dvd.getShortfilms()){
-            String cm = sf.getBody();
-            cellLabel = new Label(colIndex, lineIndex, cm, cellFormat);
+        Shortfilm[] shortfilms = new Shortfilm[5];
+        int j = 0;
+        for (Shortfilm sf:dvd.getShortfilms()){
+            shortfilms[j]=sf;
+            j++;
+        }
+        for (int i = 0; i<5; i++){
+            String cm = Objects.nonNull(shortfilms[i]) && shortfilms[i].getBody().length()>0 ? shortfilms[i].getBody():null;
+            cellLabel = new Label(i+colIndex, lineIndex, cm, cmCellFormat);
             sheet.addCell(cellLabel);
-            colIndex++;
         }
     }
 
@@ -563,6 +584,41 @@ public class IoService {
         CellView cv = sheet.getColumnView(index);
         cv.setAutosize(true);
         sheet.setColumnView(index,cv);
+    }
+
+    private File getEmptyExcelFileOrCreateIfNotExists() throws IOException {
+        File directory = new File(excelFolder);
+        if (!directory.exists()){
+            boolean dirCreated = directory.mkdirs();
+            System.out.println("dossier "+ directory.getAbsolutePath() +" créé");
+            if (!dirCreated){
+                throw new IOException("impossible de créer le dossier "+excelFolder);
+            }
+        }
+        Path filePath = Paths.get(excelFolder, excelFilename);
+        File file = filePath.toFile();
+        // print path
+        System.out.println("chemin du fichier importé : "+file.getAbsolutePath());
+        if (!file.exists()){
+            Resource resource = resourceLoader.getResource("classpath:data/enums.json"); // data/enums.json
+            InputStream is = resource.getInputStream();
+            Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            is.close();
+        }
+        return file;
+    }
+    private static String generateColor(Random r) {
+        final char [] hex = { '0', '1', '2', '3', '4', '5', '6', '7',
+                '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+        char [] s = new char[7];
+        int     n = r.nextInt(0x1000000);
+
+        s[0] = '#';
+        for (int i=1;i<7;i++) {
+            s[i] = hex[n & 0xf];
+            n >>= 4;
+        }
+        return new String(s);
     }
 
     private void resetLineCounter(){

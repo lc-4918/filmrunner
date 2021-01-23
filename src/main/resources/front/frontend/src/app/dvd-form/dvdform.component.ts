@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {FormArray, FormBuilder, FormControl} from "@angular/forms";
 import {FilmListItem} from "../models/film-list-item";
+import {Theme} from "../models/theme";
 
 @Component({
   selector: 'app-dvdform',
@@ -30,7 +31,7 @@ export class DvdformComponent implements OnInit, OnDestroy {
   paysArray: any = (codePays as any).default;
   pays: string[] = [];
   directors: string[] = [];
-  themes: string[] | undefined;
+  themes: Theme[] | undefined;
   dvdDetailMap: Map<number,boolean> = new Map<number,boolean>();
   hasDescription: boolean = false;
   descriptionToggleLabel = "Ajouter une description";
@@ -119,15 +120,12 @@ export class DvdformComponent implements OnInit, OnDestroy {
     )
 
     // Get all existing themes for select
-    this.restService.getAllThemesName().pipe(
+    this.restService.getAllThemes().pipe(
       filter(()=>!this.themes),
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
       res=>{
-        const index = res.indexOf("",0);
-        if (index>=0){
-          res.splice(index,1);
-        }
+        this.dataService.cleanEmptyThemes(res);
         this.themes = res;
         this.dataService.setThemeList(res);
       },

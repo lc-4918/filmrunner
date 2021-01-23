@@ -181,12 +181,12 @@ public class DvdService {
                 realisateurs.add(director);
             });
 
-        List<String> IThemes = dto.getThemes();
+        Map<String, String> IThemes = dto.getThemes();
         Set<Theme> themes = new HashSet<>();
         if (Objects.nonNull(IThemes) && !IThemes.isEmpty())
-            IThemes.forEach(name -> {
+            IThemes.forEach((name, color) -> {
                 Optional<Theme> optionalTheme = themeRepository.findThemeByName(name);
-                Theme theme = optionalTheme.orElseGet(() -> themeRepository.save(new Theme(name)));
+                Theme theme = optionalTheme.orElseGet(() -> themeRepository.save(new Theme(name,color)));
                 themes.add(theme);
             });
 
@@ -307,9 +307,8 @@ public class DvdService {
                 .stream()
                 .map(Shortfilm::getBody).collect(Collectors.toList());
         dvdForm.setShortfilms(shortFilms);
-        List<String> themes = dvd.getThemes()
-                .stream()
-                .map(Theme::getName).collect(Collectors.toList());
+        Map<String,String> themes = dvd.getThemes().stream()
+                .collect(Collectors.toMap(Theme::getName, Theme::getColor));
         dvdForm.setThemes(themes);
         return dvdForm;
     }

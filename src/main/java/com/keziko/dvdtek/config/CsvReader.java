@@ -9,6 +9,8 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -43,7 +45,8 @@ public class CsvReader {
         settings.setEncoding("ISO8859_1");
         Workbook workbook = null;
         try{
-            workbook = Workbook.getWorkbook(new File(fileLocation),settings);
+            File file = new File(fileLocation);
+            workbook = Workbook.getWorkbook(file,settings);
             Sheet sheet = workbook.getSheet(0);
             int rows = sheet.getRows();
             System.out.println("NOMBRE DE LIGNES: " + rows);
@@ -62,6 +65,9 @@ public class CsvReader {
                     String pays = sheet.getCell(6, i).getContents();
                     String duree = sheet.getCell(7, i).getContents();
                     String sub = sheet.getCell(8, i).getContents();
+                    if ("0".equals(sub)){
+                        sub="";
+                    }
                     String support = sheet.getCell(9, i).getContents();
                     String norme = sheet.getCell(10, i).getContents();
                     String details = sheet.getCell(11, i).getContents();
@@ -81,7 +87,7 @@ public class CsvReader {
                     }
                 }
             }
-        }catch (IOException | BiffException e) {
+        }catch (IOException | BiffException | NullPointerException e) {
             e.printStackTrace();
             return e.getMessage();
         } finally {

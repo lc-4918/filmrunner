@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login'], { relativeTo: this.route }).then();
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = err.message;
         this.isSignUpFailed = true;
       }
     );

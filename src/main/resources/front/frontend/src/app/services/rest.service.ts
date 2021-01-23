@@ -4,11 +4,14 @@ import {Observable, throwError} from 'rxjs';
 import {DvdForm} from '../models/dvd-form';
 import {FilmListItem} from '../models/film-list-item';
 import {environment} from '../../environments/environment';
+import  *  as  enums  from  '../models/enums.json';
+import {Theme} from "../models/theme";
 @Injectable({
   providedIn: 'root'
 })
 
 export class RestService {
+  listes = enums as any
   httpHeader = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -72,14 +75,19 @@ export class RestService {
 
 
   // THEME MANAGEMENT
-  getAllThemesName(): Observable<string[]>{
-    return this.http.get<string[]>(this.baseUrl+'theme');
+  getAllThemes(): Observable<Theme[]>{
+    return this.http.get<Theme[]>(this.baseUrl+'theme');
   }
-  createTheme(name: string):Observable<string>{
-    return this.http.put<string>(this.baseUrl+'theme', name)
+  createTheme(name: string):Observable<Theme>{
+    const color = this.getRandomColor();
+    const theme: Theme = {
+      name: name,
+      color: color
+    }
+    return this.http.put<Theme>(this.baseUrl+'theme/',theme)
   }
-  updateTheme(oldValue: string, newValue: string):Observable<string>{
-    return this.http.put<string>(this.baseUrl+'theme/'+oldValue,newValue);
+  updateTheme(oldValue: string, newValue: string):Observable<Theme>{
+    return this.http.put<Theme>(this.baseUrl+'theme/'+oldValue,newValue);
   }
   deleteTheme(name: string):Observable<boolean>{
     return this.http.delete<boolean>(this.baseUrl+'theme/'+name);
@@ -89,7 +97,7 @@ export class RestService {
   // IMAGE MANAGEMENT
   upload(file: File): Promise<any> {
     const formData: FormData = new FormData();
-    formData.append('file', file);
+    formData.append('file', JSON.stringify(file));
     return this.http.post(this.baseUrl+'uploadFile',formData).toPromise();
   }
   getFiles(): Observable<any> {
@@ -107,6 +115,7 @@ export class RestService {
     const formData: FormData = new FormData();
     if (file){
       formData.append('file', file);
+
     }
     return this.http.post<any>(this.baseUrl+"import/execute", formData);
   }
@@ -118,7 +127,7 @@ export class RestService {
 
   // DOWNLOAD DB
   downloadDb():Observable<any>{
-   return this.http.request("GET",this.baseUrl+"db/download",{ responseType: 'blob' })
+      return this.http.post(this.baseUrl+"db/download",this.listes.default,{ responseType: 'blob' })
   }
 
   // CONTEXT
@@ -141,4 +150,9 @@ export class RestService {
     return throwError(
       'Something bad happened; please try again later.');
   };
+  getRandomColor() {
+    const color = Math.floor(0x1000000 * Math.random()).toString(16);
+    return '#' + ('000000' + color).slice(-6);
+  }
+
 }

@@ -1,3 +1,42 @@
+.title-container {
+  display: flex;                  /* establish flex container */
+  flex-direction: row;            /* default value; can be omitted */
+  flex-wrap: nowrap;              /* default value; can be omitted */
+  justify-content: space-between; /* switched from default (flex-start, see below) */
+  align-items: center;
+}
+.title-container > div {
+}
 h1{
   text-align: center;
+  display: inline-block;
+  margin: 0;
+}
+.theme-list{
+  display: inline-block;
+}
+.content{
+  padding-top: 10px;
+}
+table{
+  width: 100%;
+}
+.flag-box{
+  min-width: 24px;
+  min-height: 24px;
+  background-size: cover;
+  display: inline-block;
+  margin-right: 5px;
+}
+.flag-box:last-of-type{
+  margin-right: 0;
+}
+.right{
+  text-align: right;
+}
+.flex-center{
+  justify-content: center;
+}
+.label{
+  font-size: 12px;
 }

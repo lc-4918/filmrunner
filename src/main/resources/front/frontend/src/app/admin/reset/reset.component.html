@@ -13,16 +13,26 @@
     <mat-card-content>
       <div class="content">
         <div *ngIf="!hasSucceed">
-          <span>En cochant ici vous supprimerez toutes les films, court-métrages, réalisateurs et thèmes du film</span>
-          <mat-checkbox [(ngModel)]="toClean" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+          <div class="reset-text">
+            <mat-checkbox class="reset-checkbox" [(ngModel)]="toClean" [ngModelOptions]="{standalone: true}"></mat-checkbox>
+            <span>En cochant ici vous acceptez de supprimer:</span>
+            <div class="suppr-list">
+              <ul>
+                <li>films</li>
+                <li>court-métrages</li>
+                <li>réalisateurs</li>
+                <li>thèmes</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="rappel mt20">
+        <div class="rappel mt20" [class.after-reset]="hasSucceed">
           <span>Les listes de détails, supports, normes, etc, ne {{hasSucceed? ' sont ': ' seront '}} pas supprimées</span>
         </div>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <div class="form-group center mb20">
+      <div class="form-group center action-container">
         <div
           role="alert"
           *ngIf="f.submitted"
@@ -31,7 +41,7 @@
           {{ messageResponse }}
         </div>
       </div>
-      <div class="center">
+      <div class="buttons center">
         <button mat-raised-button (click)="return()" color="link">Retour</button>
         <button mat-raised-button *ngIf="toClean && !hasSucceed" class="ml20" (click)="resetAll()" color="accent">Confirmer</button>
       </div>

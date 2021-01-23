@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Nom de classe : CodePaysEnum
+ * Nom d'enum : CodePaysEnum
  * @version 15/03/2020
  * @author Luc CLÉMENT - lucclement38@gmail.com
  */

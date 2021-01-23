@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Nom de classe : Dvdrepository
+ * Nom de l'interface : Dvdrepository
  * @version 16/03/2020
  * @author Luc CLÉMENT - lucclement38@gmail.com
  */

@@ -39,6 +39,7 @@ public class ImageFileController {
      */
     @PostMapping("/uploadFile")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+        log.info("POST /uploadFile | file = {}", file.getOriginalFilename());
         String fileName = null;
         String userDirectory = new File("").getAbsolutePath();
         String fileDownloadFolder = userDirectory + UPLOAD_DIR;
@@ -73,6 +74,7 @@ public class ImageFileController {
      */
     @PutMapping("image/{id}")
     public ResponseEntity<Boolean> deleteImageByDvdId(@PathVariable("id") Long id) {
+        log.info("PUT /image/id | id = {}", id);
         Boolean result = dvdService.deleteImageByDvdId(id);
         return ResponseEntity.ok().body(result);
     }

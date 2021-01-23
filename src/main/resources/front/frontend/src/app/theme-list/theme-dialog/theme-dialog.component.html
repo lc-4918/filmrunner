@@ -8,12 +8,13 @@
         <mat-chip-list #chipList [(ngModel)]="selectedThemes" multiple>
           <mat-chip
             *ngFor="let theme of themes"
+            [ngStyle]="{'background-color': theme.color,'color': getColor(theme)}"
             [selectable]="selectable"
             [selected]="isSelected(theme)"
             (click)="toggleTheme(theme)"
             [removable]="removable"
             (removed)="remove(theme)">
-            {{theme}}&nbsp;
+            {{theme.name}}&nbsp;
             <mat-icon matChipRemove>{{isSelected(theme) ? "edit" : "cancel"}}</mat-icon>
           </mat-chip>
           <input (focus)="checkPlaceHolder()" (blur)="checkPlaceHolder()" matInput placeholder=" {{inputPlaceholder}} "
@@ -26,8 +27,8 @@
     <div *ngIf="selectedThemes.length>0" class="dialog-edit-container">
       <mat-form-field class="dialog-edit-field">
         <mat-label>Nouveau nom du thème</mat-label>
-        <input matInput
-               [(ngModel)]="currentValue"
+        <input matInput *ngIf="currentValue && currentValue.name"
+               [(ngModel)]="currentValue.name"
                (keydown.enter)="update()"
                class="dialog-edit-input">
       </mat-form-field>

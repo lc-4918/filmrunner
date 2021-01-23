@@ -43,6 +43,7 @@ public class DirectorController {
     @GetMapping("director/{id}")
     public ResponseEntity<List<DvdListItem>> getDtosByDirectorId(@PathVariable("id") Long id) {
         try {
+            log.info("GET /director/id | id = {}",id);
             List<DvdListItem> dtos = dvdService.findDtosByDirectorId(id);
             return ResponseEntity.status(HttpStatus.OK).body(dtos);
         } catch (Exception e) {
@@ -61,6 +62,7 @@ public class DirectorController {
     @PatchMapping("/director/{id}")
     public ResponseEntity<Boolean> updateDirectorName(@PathVariable("id") Long id, @RequestBody String  name){
         try{
+            log.info("PATCH /director/id | id = {}, name={}",id,name);
             Director director = directorService.updateDirector(name,id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
         }catch(Exception e){
@@ -78,6 +80,7 @@ public class DirectorController {
     @GetMapping("/director")
     public ResponseEntity<List<String>>getAllDirectors(){
         try{
+            log.info("GET /director");
             List<String> directors = directorService.findAllDirectorNames();
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(directors);
         }catch(Exception e){
@@ -95,6 +98,7 @@ public class DirectorController {
     @GetMapping("/director/")
     public ResponseEntity<String>findDirectorIdByName(@RequestParam("name") String name){
         try{
+            log.info("GET /director | name={}",name);
             Long directorId = directorService.findDirectorIdByName(name);
             return ResponseEntity.status(HttpStatus.OK).body(directorId.toString());
         }catch (NoResultException e){
@@ -112,6 +116,7 @@ public class DirectorController {
     @GetMapping("/director/id/{id}")
     public ResponseEntity<ResponseMessage>findDirectorNameById(@PathVariable("id") Long id){
         try{
+            log.info("GET /director/id/id | id={}",id);
             String directorName = directorService.findDirectorNameById(id);
             ResponseMessage message = new ResponseMessage(directorName);
             return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -124,6 +129,7 @@ public class DirectorController {
     @DeleteMapping("/director/{id}")
     public ResponseEntity<Boolean>deleteDirector(@PathVariable("id") Long id){
         try {
+            log.info("DELETE /director/id | id={}",id);
             directorService.deleteDirectorById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {

@@ -21,7 +21,7 @@ export class ResetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  resetAll(){
+  resetAll():void{
     this.restService.cleanDb().pipe(
       // @ts-ignore
       takeWhile(()=>this.hasSubscription)
@@ -35,11 +35,11 @@ export class ResetComponent implements OnInit, OnDestroy {
     )
   }
 
-  return(){
+  return():void{
     this.router.navigate([''], { relativeTo: this.route }).then();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy():void{
     this.hasSubscription = false;
   }
 }

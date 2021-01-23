@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Nom de classe : DvdForm
@@ -34,7 +35,7 @@ public class DvdForm {
     private List<String> pays;
     private List<String> realisateurs;
     private List<String> shortfilms;
-    private List<String> themes;
+    private Map<String,String> themes;
 
 
 }

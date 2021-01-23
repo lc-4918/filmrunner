@@ -1,55 +1,75 @@
 <ng-container *ngIf="film">
-  <h1 mat-dialog-title>{{film.titre}}</h1>
-  <div mat-dialog-content>
-    <div *ngIf="film.titreVf">
-      <span>Titre VF</span>
-      <span>{{film.titreVf}}</span>
-    </div>
+  <div class="title-container">
     <div>
-      <span>{{film.annee}}</span>
+      <h1 mat-dialog-title>{{film.titreVf? film.titreVf : film.titre}}</h1>
     </div>
-    <div>
-      <span>{{film.duree}}</span>
+    <div class="theme-list">
+      <mat-chip-list aria-label="Fruit selection">
+        <mat-chip *ngFor="let theme of film.themes" [ngStyle]="{'background-color': theme.color,'color': getColor(theme)}">
+          {{theme.name}}
+        </mat-chip>
+      </mat-chip-list>
     </div>
+  </div>
+  <div mat-dialog-content class="content">
+    <table>
+      <tr>
+        <td>{{film.genre +", "+film.tip}}</td>
+        <td>
+          <div class="right">
+            <span>{{film.duree+"'  "}}</span><span>{{film.annee}}</span>
+          </div>
+        </td>
+      </tr>
+    </table>
     <div *ngIf="film.description">
       <span>{{film.description}}</span>
     </div>
-    <div *ngIf="film.support">
-      <span>{{film.support}}</span>
-    </div>
-    <div *ngIf="film.genre">
-      <span>{{film.genre}}</span>
-    </div>
-    <div *ngIf="film.norme">
-      <span>{{film.norme}}</span>
-    </div>
-    <div *ngIf="film.tip">
-      <span>{{film.tip}}</span>
-    </div>
-    <div *ngIf="film.source">
-      <span>{{film.source}}</span>
-    </div>
-    <div *ngIf="film.details">
-      <span *ngFor="let detail of film.details; let index; let isLast=last;">{{detail}}{{isLast ? '' : ', '}}</span>
-    </div>
-    <div *ngIf="film.pays">
-      <span *ngFor="let pay of film.pays; let index; let isLast=last;">{{pay}}{{isLast ? '' : ', '}}</span>
-    </div>
-    <div *ngIf="film.subLangs">
-      <span *ngFor="let lang of film.subLangs; let index; let isLast=last;">{{lang}}{{isLast ? '' : ', '}}</span>
-    </div>
-    <div *ngIf="film.realisateurs">
-      <span *ngFor="let rea of film.realisateurs; let index; let isLast=last;">{{rea}}{{isLast ? '' : ', '}}</span>
-    </div>
-    <div *ngIf="film.shortfilms">
+    <table>
+      <tr>
+        <td>
+          <div>
+            <div class="label">Réalisateur{{film.realisateurs && film.realisateurs.length>1?'s':''}} :</div>
+            <div><span *ngFor="let rea of film.realisateurs; let index; let isLast=last;">{{rea}}{{isLast ? '' : ', '}}</span></div>
+          </div>
+        </td>
+        <td>
+          <div class="right"><span *ngFor="let detail of film.details; let index; let isLast=last;">{{detail}}{{isLast ? '' : ', '}}</span></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="label">Production :</div>
+          <div><span *ngFor="let pay of film.pays; let index; let isLast=last;">{{pay}}{{isLast ? '' : ', '}}</span></div>
+        </td>
+        <td>
+          <div class="right">
+            <span>{{film.support +", "+film.norme}}</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div *ngIf="film.source">
+            <div class="label">Source:</div>
+            <div><span>{{film.source}}</span></div>
+          </div>
+        </td>
+        <td>
+          <div *ngIf="film.subLangs" class="right">
+            <!--<div class="label">Sous-titres :</div>
+            <div><span *ngFor="let lang of film.subLangs; let index; let isLast=last;">{{lang}}{{isLast ? '' : ', '}}</span></div>-->
+            <div ><div *ngFor="let lang of film.subLangs; let index; let isLast=last;" class="flag-box" [style.background-image]="'url(../../assets/img/flags/' + lang + '.png)'"></div></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div>
       <span *ngFor="let sf of film.shortfilms; let index; let isLast=last;">{{sf}}{{isLast ? '' : ', '}}</span>
     </div>
-    <div *ngIf="film.themes">
-      <span *ngFor="let th of film.themes; let index; let isLast=last;">{{th}}{{isLast ? '' : ', '}}</span>
-    </div>
   </div>
-  <div mat-dialog-actions>
-    <button mat-button (click)="close()" cdkFocusInitial>Fermer</button>
+  <div mat-dialog-actions class="flex-center">
+    <button mat-raised-button color="primary" (click)="close()" cdkFocusInitial>Fermer</button>
   </div>
 </ng-container>
 

@@ -39,6 +39,7 @@ tr.mat-row td, tr.mat-footer-row td {
 }
 .list-cell-header{
   display: none;
+  border: none;
 }
 .annee{
   min-width: 80px;
@@ -113,4 +114,7 @@ mat-spinner{
 }
 .center{
   text-align: center;
+}
+.noborder{
+  border: none;
 }

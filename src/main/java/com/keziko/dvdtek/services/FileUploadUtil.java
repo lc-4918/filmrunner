@@ -2,6 +2,8 @@ package com.keziko.dvdtek.services;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.Objects;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
@@ -16,15 +18,19 @@ public class FileUploadUtil {
      */
     public static void saveFile(String uploadDir, String fileName,
                                 MultipartFile multipartFile) throws IOException {
-        Path uploadPath = Paths.get(uploadDir);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+        Path filePath;
+        if (Objects.isNull(uploadDir)){
+            filePath = Paths.get(fileName);
+        }else{
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            filePath = uploadPath.resolve(fileName);
         }
-            InputStream inputStream = multipartFile.getInputStream();
+        InputStream inputStream = multipartFile.getInputStream();
+        Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**

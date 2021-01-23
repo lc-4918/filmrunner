@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,8 +27,11 @@ public class Theme {
 
     private String name;
 
-    public Theme(String name) {
+    private String color;
+
+    public Theme(String name, String color) {
         this.name = name;
+        this.color = color;
     }
 
     public Theme(String name, Set<Dvd> dvds) {
@@ -37,12 +39,4 @@ public class Theme {
         this.dvds = dvds;
     }
 
-    @Override
-    public String toString() {
-        return "Theme{" +
-                "id=" + id +
-                ", dvdsCount=" + dvds.size() +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

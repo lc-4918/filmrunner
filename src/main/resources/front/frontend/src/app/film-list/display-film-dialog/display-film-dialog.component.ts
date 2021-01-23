@@ -8,6 +8,8 @@ import {DataService} from "../../services/data.service";
 import *  as  enums from '../../models/enums.json';
 import {JsonItem} from "../../models/json-item";
 import {FilmDisplay} from "../../models/film-display";
+import {Theme} from "../../models/theme";
+import {FilmListItem} from "../../models/film-list-item";
 
 @Component({
   selector: 'app-display-film-dialog',
@@ -44,32 +46,34 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
       res=>{
         this.filmReceived = res;
         this.transformPays();
-        const film: FilmDisplay = {
+        this.transformThemes();
+        const filmThemes = this.transformThemes();
+        this.film = {
           titre: this.filmReceived.titre,
           titreVf: this.filmReceived.titreVf,
           annee: this.filmReceived.annee,
           duree: this.filmReceived.duree,
           description: this.filmReceived.description,
-          tip: this.filmReceived.format? this.findLabelById(this.dvdTypeArray, this.filmReceived.format):undefined,
-          support: this.filmReceived.support? this.findLabelById(this.dvdSupportArray, this.filmReceived.support):undefined,
-          genre: this.filmReceived.type? this.findLabelById(this.dvdGenreArray, this.filmReceived.type):undefined,
-          source: this.filmReceived.source? this.findLabelById(this.dvdSourceArray, this.filmReceived.source):undefined,
-          norme: this.filmReceived.norme? this.findLabelById(this.dvdNormeArray, this.filmReceived.norme):undefined,
-          details: this.filmReceived.details? this.parseDetails(this.filmReceived.details): undefined,
+          tip: this.filmReceived.format ? this.findLabelById(this.dvdTypeArray, this.filmReceived.format) : undefined,
+          support: this.filmReceived.support ? this.findLabelById(this.dvdSupportArray, this.filmReceived.support) : undefined,
+          genre: this.filmReceived.type ? this.findLabelById(this.dvdGenreArray, this.filmReceived.type) : undefined,
+          source: this.filmReceived.source ? this.findLabelById(this.dvdSourceArray, this.filmReceived.source) : undefined,
+          norme: this.filmReceived.norme ? this.findLabelById(this.dvdNormeArray, this.filmReceived.norme) : undefined,
+          details: this.filmReceived.details ? this.parseDetails(this.filmReceived.details) : undefined,
           pays: this.filmReceived.pays,
           subLangs: this.filmReceived.subLangs,
-          themes: this.filmReceived.themes,
+          themes: filmThemes,
           realisateurs: this.filmReceived.realisateurs,
           shortfilms: this.filmReceived.shortfilms,
-          imageUrl: this.filmReceived.imageUrl? this.filmReceived.imageUrl: this.dataService.imageDirectory+'default.jpg',
-        }
-        this.film = film;
+          imageUrl: this.filmReceived.imageUrl ? this.filmReceived.imageUrl : this.dataService.imageDirectory + 'default.jpg',
+        };
       },
       error => {
         console.log("impossible de lire le film : "+error);
       }
     )
   }
+
 
   parseDetails(details: string):string[]{
     const array: string[]=[];
@@ -98,9 +102,30 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
       if (this.filmReceived.pays && this.filmReceived.pays.length>0){
         let pays = [];
         for (let i=0; i<this.filmReceived.pays.length; i++){
-          pays.push(this.dataService.findLabelByCodePays(this.filmReceived.pays[i]))
+          const p = this.dataService.findLabelByCodePays(this.filmReceived.pays[i]);
+          if (p.length>0){
+            pays.push(this.dataService.findLabelByCodePays(this.filmReceived.pays[i]));
+          }
         }
+        this.filmReceived.pays = pays;
       }
+    }
+  }
+  transformThemes():Theme[]{
+    let filmThemes:Theme[] = [];
+    if (this.filmReceived){
+      if (this.filmReceived.themes){
+        filmThemes = this.dataService.convertMapThemeToTheme(this.filmReceived.themes);
+      }
+    }
+    return filmThemes;
+  }
+  getColor(theme: Theme):string{
+    if (theme.color){
+      const isLightBackground = this.dataService.isLight(theme.color);
+      return isLightBackground? 'rgba(0,0,0,.87)':'rgb(255,255,255)';
+    }else {
+      return 'rgba(0,0,0,.87)';
     }
   }
 

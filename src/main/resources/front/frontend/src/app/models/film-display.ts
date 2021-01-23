@@ -1,3 +1,5 @@
+import {Theme} from "./theme";
+
 export interface FilmDisplay {
   id?: number;
   titre:string;
@@ -17,7 +19,7 @@ export interface FilmDisplay {
   pays: string[];
   subLangs: string[];
 
-  themes?:string[];
+  themes?:Theme[];
   realisateurs: string[];
   shortfilms: string[];
 }

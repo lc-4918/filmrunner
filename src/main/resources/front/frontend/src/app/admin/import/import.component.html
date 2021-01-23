@@ -13,17 +13,17 @@
           <div *ngIf="isNotExcel" class="center"><span class="fail">Fichier excel au format XLS (.xls) requis</span></div>
           <div *ngIf="file" class="files-list">
             <p> {{ file.name }} </p>
-            <button class="delete-file" (click)="deleteAttachment()">
-              <img src="../../assets/img/Recycle_Bin_Full.png">
+            <button mat-icon-button class="delete-file" (click)="deleteAttachment()">
+              <mat-icon>delete</mat-icon>
             </button>
           </div>
         </div>
         <div class="counters-container">
           <div *ngIf="linesImported>0" class="film-list">
-            <div class="title">&nbsp;&nbsp;{{importedTitle}}</div>
+            <div class="imported-title">&nbsp;&nbsp;{{importedTitle}}</div>
           </div>
           <div *ngIf="isProcessing || isSucceed">
-            <span class="line-label">Nombre de lignes importées : </span><span>{{linesImported}}</span>
+            <span class="line-label">Nombre de lignes importées : </span><span class="imported-number">{{linesImported}}</span>
           </div>
         </div>
         <div class="result-container">

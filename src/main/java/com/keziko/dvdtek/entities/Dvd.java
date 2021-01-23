@@ -3,7 +3,6 @@ package com.keziko.dvdtek.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
 import java.util.*;

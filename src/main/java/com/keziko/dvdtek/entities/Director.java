@@ -3,7 +3,6 @@ package com.keziko.dvdtek.entities;
 import com.keziko.dvdtek.enums.CodePaysEnum;
 import lombok.Data;
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

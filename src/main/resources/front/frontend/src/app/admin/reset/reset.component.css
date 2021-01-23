@@ -1,9 +1,13 @@
 .reset-card {
-  max-width: 700px;
+  width: 400px;
+  height: 300px;
   margin-left: auto;
   margin-right: auto;
   background: none;
   background: rgba(255,255,255,0.8);
+}
+mat-card{
+  position: relative;
 }
 .center{
   text-align: center;
@@ -18,7 +22,6 @@
   position: relative;
 }
 .content{
-  min-height: 300px;
 }
 mat-checkbox{
   margin-left: 20px;
@@ -48,7 +51,46 @@ title{
 .ml20{
   margin-left: 20px;
 }
-.mb20{
+.action-container{
+  position: absolute;
+  bottom: 20%;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+.reset-checkbox{
+  text-align: left;
+  margin-right: 20px;
+}
+.suppr-list{
+  padding-left: 60px;
+}
+.after-reset{
+  font-size:13px;
+}
+
+ul {
+  position: relative;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 1.2em;
+}
+ul li:before {
+  content: "x";
+  font-weight: 600;
+  color: #ff4081;
+  position: absolute;
+  left: 0;
+}
+.reset-text{
+  text-align: left;
+  margin-left: 20px;
+}
+.buttons{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin-bottom: 20px;
 }
 /*drag drop*/

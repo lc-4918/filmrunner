@@ -42,6 +42,7 @@ public class DvdController {
     @GetMapping("/dvd")
     public ResponseEntity<List<DvdListItem>> getDtos() {
         try {
+            log.info("GET /dvd ");
             List<DvdListItem> dtos = dvdService.findAllDto();
             if (Objects.isNull(dtos))
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -61,6 +62,7 @@ public class DvdController {
     @PutMapping("/dvd")
     public ResponseEntity<DvdListItem> addDvd(@RequestBody DvdForm formDto) {
         try {
+            log.info("PUT /dvd | formDto = {}",formDto);
             Dvd dvd = dvdService.addDvd(formDto);
             DvdListItem dvdItem = dvdService.convertDvdToListDto(dvd);
             if (Objects.isNull(dvdItem))
@@ -82,6 +84,7 @@ public class DvdController {
     @GetMapping("/dvd/{id}")
     public ResponseEntity<DvdForm> getDvd(@PathVariable("id") Long id) {
         try {
+            log.info("GET /dvd/id | id = {}",id);
             Optional<Dvd> optionalDvd = dvdService.findDvdById(id);
             if (optionalDvd.isPresent()) {
                 Dvd dvd = optionalDvd.get();
@@ -107,6 +110,7 @@ public class DvdController {
     @PutMapping("/dvd/{id}")
     public ResponseEntity<DvdListItem> updateDvd(@RequestBody DvdForm dvdForm, @PathVariable("id") Long id) {
         try {
+            log.info("PUT /dvd/id | id = {}, dvdForm = {}",id,dvdForm);
             Dvd dvd = dvdService.updateDvd(dvdForm, id);
             DvdListItem item = dvdService.convertDvdToListDto(dvd);
             return ResponseEntity.status(HttpStatus.OK).body(item);
@@ -125,6 +129,7 @@ public class DvdController {
     @DeleteMapping("/dvd/{id}")
     public ResponseEntity<Boolean> deleteDvdById(@PathVariable("id") Long id) {
         try {
+            log.info("DELETE /dvd/id | id = {}",id);
             dvdService.deleteDvdById(id);
             return ResponseEntity.status(HttpStatus.OK).body(true);
         } catch (IllegalArgumentException e) {
@@ -141,6 +146,7 @@ public class DvdController {
     @GetMapping("/context")
     public ResponseEntity<ResponseMessage> getApplicationContext() {
         try {
+            log.info("GET /context");
             String userDirectory = new File("").getAbsolutePath();
             String imageDirectory = userDirectory + "\\img\\";
             ResponseMessage message = new ResponseMessage(imageDirectory);
@@ -158,6 +164,7 @@ public class DvdController {
     @PostMapping("/dvd")
     public ResponseEntity<List<DvdListItem>> addDvds(List<DvdForm> formDtos) {
         try {
+            log.info("POST /dvd | formDtos[0].titre = {}",formDtos.get(0).getTitre());
             List<Dvd> dvds = dvdService.addDvds(formDtos);
             if (Objects.isNull(dvds)) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

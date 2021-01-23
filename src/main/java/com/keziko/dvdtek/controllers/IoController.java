@@ -1,12 +1,19 @@
 package com.keziko.dvdtek.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keziko.dvdtek.config.CsvReader;
 import com.keziko.dvdtek.dtos.ResponseMessage;
+import com.keziko.dvdtek.dtos.json.ListeObject;
 import com.keziko.dvdtek.dtos.json.XlsObject;
 import com.keziko.dvdtek.services.FileUploadUtil;
 import com.keziko.dvdtek.services.IoService;
 import jxl.write.WriteException;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.DataInput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -64,15 +73,14 @@ public class IoController {
     public ResponseEntity<ResponseMessage> importxls(@RequestParam("file") MultipartFile file) {
         String userDirectory = new File("").getAbsolutePath();
         String fileDownloadFolder = userDirectory + UPLOAD_DIR;
-        String fileLocation = null;
+        String fileName = null;
         try {
             if (Objects.nonNull(file.getOriginalFilename())) {
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                fileLocation = (fileDownloadFolder + fileName);
-                FileUploadUtil.saveFile(fileDownloadFolder, fileName, file);
+                fileName = StringUtils.cleanPath(file.getOriginalFilename());
+                // fileLocation = (fileDownloadFolder + fileName);
+                FileUploadUtil.saveFile(null, fileName, file);
             }
-            iOService.initRolesAndUser();
-            Object data = CsvReader.readJExcel(fileLocation);
+            Object data = CsvReader.readJExcel(fileName);
             if (data instanceof String) {
                 ResponseMessage message = new ResponseMessage((String) data);
                 return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -94,6 +102,7 @@ public class IoController {
      */
     @GetMapping("import/count")
     public ResponseEntity<ResponseMessage> getLineImportedCount() {
+        log.info("GET /import/count");
         ResponseMessage response = iOService.getLineCounter();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -102,11 +111,15 @@ public class IoController {
      * Téléchargement de la base de données H2 "films.mv.db"
      * @return le fichier de la base de données
      */
-    @GetMapping("/db/download")
-    public ResponseEntity<InputStreamResource> download(){
-        File file = null;
+    @PostMapping("/db/download")
+    public ResponseEntity<InputStreamResource> download(@RequestBody String list){
+        File file;
         try {
-            file = iOService.createExcel();
+            ObjectMapper om = new ObjectMapper();
+            om.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            ListeObject listes = om.readValue(list, ListeObject.class);
+            log.info("PUT /db/download");
+            file = iOService.createExcel(listes);
             FileInputStream fis = new FileInputStream(file);
             InputStreamResource isr = new InputStreamResource(fis);
             return ResponseEntity.ok()

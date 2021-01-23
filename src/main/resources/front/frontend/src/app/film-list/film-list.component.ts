@@ -12,6 +12,7 @@ import {AuthService} from "../services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DeleteFilmDialogComponent} from "./delete-film-dialog/delete-film-dialog.component";
 import {DisplayFilmDialogComponent} from "./display-film-dialog/display-film-dialog.component";
+import {Theme} from "../models/theme";
 
 @Component({
   selector: 'app-film-list',
@@ -26,7 +27,7 @@ export class FilmListComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   realisateurId: number | undefined;
   resultsLength: number | undefined;
-  themes: string[] |undefined;
+  themes: Theme[] |undefined;
   themesSelected:string[] = [];
   columnsToDisplay: string[] = ['titre', 'realisateurs', 'annee', 'pays'];
   dataSource = new MatTableDataSource<FilmListItem>();
@@ -63,7 +64,6 @@ export class FilmListComponent implements OnInit, OnDestroy {
 
   ngOnInit():void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
-    // this.initializeFilms();
     this.authService.loggedIn.pipe(
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
@@ -75,17 +75,17 @@ export class FilmListComponent implements OnInit, OnDestroy {
         }
       }
     )
-    this.restService.getAllThemesName().pipe(
+    this.restService.getAllThemes().pipe(
       filter(()=>!this.dataService.hasThemeList()),
       takeWhile(()=>this.hasSubscription)
     ).subscribe(
-      res=>{
-        const index = res.indexOf("",0);
-        if (index>=0){
-          res.splice(index,1);
-        }
+      (res)=>{
+        this.dataService.cleanEmptyThemes(res);
         this.dataService.setThemeList(res);
         this.themes = res;
+      },
+      error => {
+        console.log(error);
       }
     )
     this.themes = this.dataService.getThemeList();
@@ -211,8 +211,8 @@ export class FilmListComponent implements OnInit, OnDestroy {
       this.themesSelected.push(theme);
     }
     let setFilms = new Set<FilmListItem>();
-    for (const theme of this.themesSelected){
-      const films: FilmListItem[] = this.dataService.getFilmList().filter(x=>x.themes?.includes(theme));
+    for (const themeName of this.themesSelected){
+      const films: FilmListItem[] = this.dataService.getFilmList().filter(x=>x.themes?.includes(themeName));
       for (const film of films){
         setFilms.add(film);
       }
@@ -252,4 +252,6 @@ export class FilmListComponent implements OnInit, OnDestroy {
   ngOnDestroy():void {
     this.hasSubscription = false;
   }
+
+
 }

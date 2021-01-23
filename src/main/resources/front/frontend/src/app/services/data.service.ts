@@ -7,6 +7,7 @@ import {JsonItem} from '../models/json-item';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {PaysItem} from '../models/pays-item';
 import {BehaviorSubject} from 'rxjs';
+import {Theme} from "../models/theme";
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class DataService {
   json = (codePays as any).default;
   filmList: FilmListItem[] = [];
   directorList: string[] = [];
-  themeList: string[] = [];
+  themeList: Theme[] = [];
   paysList: PaysItem[] = [];
   imageDirectory: string |undefined;
   directorSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -39,12 +40,12 @@ export class DataService {
     return result;
   }
 
-  findLabelByCodePays(code: string):string | null{
+  findLabelByCodePays(code: string):string{
     const pays = this.paysList.find(p=>p.code==code);
     if (pays){
       return pays.label;
     }else{
-      return null;
+      return "";
     }
   }
   findLabelsContaining(code: string):string[]{
@@ -135,12 +136,42 @@ export class DataService {
   hasThemeList(): boolean{
     return this.themeList && this.themeList.length>0;
   }
-  getThemeList(): string[]{
+  getThemeList(): Theme[]{
     return this.themeList;
   }
-  setThemeList(themeList: string[]):void{
+  setThemeList(themeList: Theme[]):void{
     this.themeList = themeList;
   }
+  replaceTheme(oldValue: string, theme: Theme):void{
+    const oldTheme = this.themeList.find(th=>th.name==oldValue);
+    if (oldTheme){
+      const index = this.themeList.indexOf(oldTheme,0);
+      this.themeList[index]=theme;
+    }
+  }
+  cleanEmptyThemes(res: Theme[]):void{
+    let indexes = [];
+    for (const th of res){
+      if (th.name==""){
+        const index = res.indexOf(th,0);
+        indexes.push(index);
+      }
+    }
+    for (const id of indexes){
+      res.splice(id,1);
+    }
+  }
+  convertMapThemeToTheme(themeMap: Map<string,string>):Theme[]{
+    const result: Theme[] = [];
+    for (const [key, value] of Object.entries(themeMap)) {
+      const th: Theme = {
+        name:key,
+        color: value
+      }
+      result.push(th);
+    }
+    return result;
+}
 
   // LOG MANAGEMENT
   openSnackBar(message: string, level: string):void {
@@ -160,5 +191,46 @@ export class DataService {
       }
     });
     return result.join(';');
+  }
+
+  isLight(colorValue: string):boolean {
+    let result = false;
+    // Check the format of the color, HEX or RGB?
+    let r: number = 0;
+    let g: number = 0;
+    let b: number = 0;
+
+    if (colorValue.match(/^rgb/)) {
+
+      // If HEX --> store the red, green, blue values in separate variables
+      const color = colorValue.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+      if (color) {
+        r = parseInt(color[1]);
+        g = parseInt(color[2]);
+        b = parseInt(color[3]);
+      }
+    }
+    else {
+
+      // If RGB --> Convert it to HEX: http://gist.github.com/983661
+      // @ts-ignore
+      const color = +("0x" + colorValue.slice(1).replace(colorValue.length < 5 && /./g, '$&$&'));
+      r = color >> 16;
+      g = color >> 8 & 255;
+      b = color & 255;
+    }
+
+    // HSP (Highly Sensitive Poo) equation from http://alienryderflex.com/hsp.html
+    if(r && g && b){
+      const hsp = Math.sqrt( 0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+      // Using the HSP value, determine whether the color is light or dark
+      if (hsp>127.5) {
+        result = true;
+      }
+      else {
+        result = false;
+      }
+    }
+    return result;
   }
 }

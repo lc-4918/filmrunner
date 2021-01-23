@@ -1,78 +1,38 @@
 .import-card {
-  max-width: 600px;
+  width: 400px;
+  height: 300px;
   margin-left: auto;
   margin-right: auto;
   background: none;
   background: rgba(255,255,255,0.8);
   }
-.film-table{
-}
-.center{
-  text-align: center;
+mat-card{
+  position: relative;
 }
 .card-title{
   font-size: 16px;
   font-weight: 400;
 }
-.mat-card-content{
-  margin-top: 50px;
+.content{
   text-align: center;
   position: relative;
+  width: 100%;
+  height: 100%;
 }
-.content{
-min-height: 315px;
-}
+.mat-card-content{
 
-.counters-container{
-  top: 20px;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
 }
-.film-list{
-  margin-bottom: 20px;
-}
-.line-label{
-  font-size: 13px;
-  margin-left: 30px;
-  display: inline-block;
-}
-.result-container{
-  margin-top: 30px;
-}
-.import-button{
-  margin-left: 20px;
-}
-.green{
-  vertical-align: bottom;
-  color: #46a35e;
-}
-title{
-  font-size: 13px;
-  display: inline-block;
-}
-.success{
-  color: #46a35e;
-  font-weight: 400;
-}
-.fail{
-  color: #f44336;
-  font-weight: 400;
-}
-/*drag drop*/
 
 .uploadfilecontainer {
-  background-image: url("../../../assets/img/cloud.png");
+  background-image: url("../../../assets/img/cloud.jpg");
   background-repeat: no-repeat;
   background-size: 100px;
   background-position: center;
-  height: 200px;
+  height: 140px;
   width: 80%;
   border: 2px dashed #3f51b5;
   border-radius: 10px;
-  margin: 20px auto;
+  margin: 10px auto;
 }
 
 .uploadfilecontainer:hover {
@@ -85,6 +45,7 @@ title{
   display: flex;
   justify-content: space-between;
   width: 80%;
+  max-height: 30px;
   margin: 10px auto;
   background: #ffffff;
   border: 1px dashed;
@@ -98,10 +59,62 @@ title{
   border: none;
   cursor: pointer;
 }
-
-.files-list .delete-file img {
-  width: 30px;
+.files-list p{
+  margin: 5px 0 0 0;
 }
-.mat-card>.mat-card-actions:last-child{
+.delete-file{
+  transform: translateY(-15%);
+}
+.line-label{
+  font-size: 13px;
+  margin-left: 30px;
+  display: inline-block;
+}
+.import-button{
+  margin-left: 20px;
+}
+.counters-container{
+  margin-top: 80px;
+  text-align: center;
+}
+.film-list{
   margin-bottom: 20px;
+}
+.imported-title{
+  font-size: 14px;
+  display: inline-block;
+  font-weight: 500;
+}
+.imported-number{
+  margin-left: 5px;
+  font-weight: 600;
+}
+.result-container{
+  margin-top: 50px;
+}
+.green{
+  vertical-align: bottom;
+  color: #46a35e;
+}
+
+.success{
+  color: #46a35e;
+  font-weight: 400;
+}
+.fail{
+  color: #f44336;
+  font-weight: 400;
+}
+/*drag drop*/
+
+
+.buttons{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 20px;
+}
+.center{
+  text-align: center;
 }

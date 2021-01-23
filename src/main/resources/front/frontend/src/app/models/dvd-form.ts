@@ -18,7 +18,7 @@ source?: string;
 pays: string[];
 subLangs: string[];
 
-themes?:string[];
+themes?:Map<string,string>;
 realisateurs: string[];
 shortfilms: string[];
 
