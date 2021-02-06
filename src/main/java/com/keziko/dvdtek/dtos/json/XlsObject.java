@@ -33,6 +33,11 @@ public class XlsObject {
     private String cm3;
     private String cm4;
     private String cm5;
+    private String cm6;
+    private String cm7;
+    private String cm8;
+    private String cm9;
+    private String cm10;
     private Integer ligneFichier;
 
     @Override

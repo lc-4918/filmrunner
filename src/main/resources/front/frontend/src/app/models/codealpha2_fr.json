@@ -232,6 +232,7 @@
   "TZ" : "République-Unie De Tanzanie",
   "UA" : "Ukraine",
   "UG" : "Ouganda",
+  "UK" : "Royaume-Uni",
   "UM" : "Îles Mineures Éloignées Des États-Unis",
   "US" : "Etats-Unis",
   "UY" : "Uruguay",
@@ -249,5 +250,6 @@
   "YT" : "Mayotte",
   "ZA" : "Afrique Du Sud",
   "ZM" : "Zambie",
-  "ZW" : "Zimbabwe"
+  "ZW" : "Zimbabwe",
+  "EN" : "Angleterre"
 }

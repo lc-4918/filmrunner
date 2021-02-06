@@ -81,8 +81,8 @@ export class ChipformComponent implements OnInit, OnDestroy{
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    let value = event.option.viewValue;
-    const valueArray = event.option.viewValue.split(' ');
+    let value = event.option.value;
+    const valueArray = event.option.value.split(' ');
     if (valueArray.length>1){
       value = valueArray[0];
     }

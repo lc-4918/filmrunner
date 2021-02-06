@@ -1,13 +1,18 @@
 <div class="list-header">
   <div class="center">
-    <mat-button-toggle-group #group="matButtonToggleGroup" appearance="legacy" multiple=true class="detail-group">
-      <mat-button-toggle *ngFor="let item of themes;" (change)="filterByTheme($event,item.name)">{{item.name}}</mat-button-toggle>
+    <mat-button-toggle-group #group="matButtonToggleGroup" appearance="legacy" multiple=true class="theme-group">
+      <mat-button-toggle *ngFor="let item of superThemes;" (change)="filter($event,item.name)" class="theme-button">{{item.name}}</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="center">
+    <mat-button-toggle-group #group="matButtonToggleGroup" appearance="legacy" multiple=true class="theme-button">
+      <mat-button-toggle *ngFor="let item of themes;" (change)="filter($event,item.name)">{{item.name}}</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
   <div class="result-number">{{resultsLength ? resultsLength<=1? resultsLength+" film": resultsLength+" films": ''}}</div>
   <div class="list-filter">
     <mat-form-field appearance="outline">
-      <input matInput (keyup)="applyFilter($event)" #input>
+      <input matInput (keyup)="filterBox=true;applyFilter($event)" #input>
     </mat-form-field>
     <div class="theme-manager">
       <app-theme-list></app-theme-list>

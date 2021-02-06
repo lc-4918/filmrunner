@@ -12,7 +12,7 @@
           <div class="titlevf-container">
             <mat-form-field appearance="outline">
               <mat-label>Titre VF</mat-label>
-              <input matInput [(ngModel)]="componentDvd.titreVf">
+              <input matInput [(ngModel)]="componentDvd.titrevf">
             </mat-form-field>
           </div>
         </div>
@@ -36,17 +36,20 @@
           <div class="theme-container">
             <mat-form-field appearance="fill">
               <mat-label>Thèmes</mat-label>
-              <mat-select [formControl]="themesControl" multiple>
+              <mat-select [compareWith]="compareFn" [formControl]="themesControl" multiple>
                 <mat-select-trigger>
-                  {{themesControl.value ? themesControl.value[0] : ''}}
-                  <span *ngIf="themesControl.value?.length == 2" class="example-additional-selection">
-                    {{themesControl.value ? ', '+themesControl.value[1] : ''}}
+                  {{themesControl.value && themesControl.value[0]? themesControl.value[0].name : ''}}
+                  <span *ngIf="themesControl.value?.length >1" class="example-additional-selection">
+                    {{themesControl.value && themesControl.value[0]? ', '+themesControl.value[1].name : ''}}
                   </span>
-                  <span *ngIf="themesControl.value?.length > 2" class="example-additional-selection">
-                    (+{{themesControl.value.length - 1}} {{themesControl.value?.length === 2 ? 'other' : 'others'}})
+                  <span *ngIf="themesControl.value?.length >2" class="example-additional-selection">
+                    {{themesControl.value && themesControl.value[0] && themesControl.value[1] ? ', '+themesControl.value[2].name : ''}}
+                  </span>
+                  <span *ngIf="themesControl.value?.length > 3" class="example-additional-selection">
+                    (+{{themesControl.value.length - 3}} {{themesControl.value?.length === 4 ? 'other' : 'others'}})
                   </span>
                 </mat-select-trigger>
-                <mat-option *ngFor="let theme of themes" [value]="theme">{{theme}}</mat-option>
+                <mat-option *ngFor="let theme of themes" [value]="theme">{{theme.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

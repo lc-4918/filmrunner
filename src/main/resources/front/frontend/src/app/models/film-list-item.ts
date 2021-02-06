@@ -1,10 +1,10 @@
 export interface FilmListItem {
   id: number;
-  titre?: string;
+  titre: string;
   titreVf?: string;
-  annee?: number;
-  pays?: string;
+  annee: number;
+  pays: string;
   subLangues?: string;
-  realisateurs?: string[];
+  realisateurs: string[];
   themes?: string[];
 }

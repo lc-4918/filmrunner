@@ -1,0 +1,112 @@
+{
+  "support": [
+    {
+      "name":"xrip",
+      "legende": "Résolution standard"
+    },
+    {
+      "name":"720p",
+      "legende": "Haute Résolution en HD 720p"
+    },
+    {
+      "name":"1080",
+      "legende": "Haute Résolution en HD 1080p"
+    },
+    {
+      "name":"dvd5",
+      "legende": "Image ISO DVD simple couche < 4,3Go"
+    },
+    {
+      "name":"dvd9",
+      "legende": "Image ISO DVD double couche > 4,3Go"
+    },
+    {
+      "name":"bd-r",
+      "legende": "Image disque Blu-ray"
+    }
+  ],
+  "detail": [
+    {
+      "name": "inc",
+      "legende": "Sous-titres incrustés dans l'image"
+    },
+    {
+      "name": "cm",
+      "legende": "DVD avec court-métrage(s)"
+    },
+    {
+      "name": "vfr",
+      "legende": "Doublage des voix disponible en français"
+    },
+    {
+      "name": "ven",
+      "legende": "Doublage des voix disponible en anglais"
+    },
+    {
+      "name": "scr",
+      "legende": "Copie issue d'un support promotionnel"
+    },
+    {
+      "name": "tvr",
+      "legende": "Copie issue d'un enregistrement TV"
+    },
+    {
+      "name": "xfr",
+      "legende": "Possibilité de sous-titres  en français"
+    },
+    {
+      "name": "xes",
+      "legende": "Possibilité de sous-titres  en espagnol"
+    },
+    {
+      "name": "xpt",
+      "legende": "Possibilité de sous-titres  en portugais"
+    },
+    {
+      "name": "xen",
+      "legende": "Possibilité de sous-titres  en anglais"
+    },
+    {
+      "name": "xit",
+      "legende": "Possibilité de sous-titres  en italien"
+    },
+    {
+      "name": "x2p",
+      "legende": "Film divisé en deux parties"
+    },
+    {
+      "name": "x3p",
+      "legende": "Film divisé en trois parties"
+    },
+    {
+      "name": "x4p",
+      "legende": "Film divisé en quatre parties"
+    },
+    {
+      "name": "log",
+      "legende": "Présence d'une marque sur l'image"
+    }
+  ],
+  "source": [
+    {
+      "name": "dvd",
+      "legende": "Provient d'un DVD"
+    },
+    {
+      "name": "vod",
+      "legende": "Provient d'une plateforme VOD"
+    },
+    {
+      "name": "web",
+      "legende": "Provient d'un site internet"
+    },
+    {
+      "name": "tv",
+      "legende": "Diffusion d'une chaine TV"
+    },
+    {
+      "name": "vhs",
+      "legende": "Provient d'un transfert de K7 VHS"
+    }
+  ]
+}

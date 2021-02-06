@@ -15,7 +15,8 @@
       [selectable]="selectable"
       [removable]="removable"
       (removed)="remove(element)"
-      class="example-box">
+      class="example-box"
+      [attr.title]="limitedChoice? dataService.findLabelByCodePays(element): element">
       {{element}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>

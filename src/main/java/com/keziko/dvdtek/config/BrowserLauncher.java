@@ -14,7 +14,7 @@ import java.net.URI;
  * @author Luc CLÉMENT - lucclement38@gmail.com
  */
 
-/* @Slf4j
+/*@Slf4j
 @Component
 public class BrowserLauncher{
     @EventListener(ApplicationReadyEvent.class)

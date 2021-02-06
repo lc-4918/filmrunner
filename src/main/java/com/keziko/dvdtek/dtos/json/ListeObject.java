@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Nom de classe : ListeObject
@@ -43,12 +44,14 @@ public class ListeObject {
         return result;
     }
 
-    public String getLabelById(int id, List<JsonItem> liste){
+    public String getLabelById(Integer id, List<JsonItem> liste){
         String result = null;
-        for (JsonItem item : liste){
-            if (id==(item.getId())){
-                result = item.getLabel();
-                break;
+        if (Objects.nonNull(id) && Objects.nonNull(liste)){
+            for (JsonItem item : liste){
+                if (id==(item.getId())){
+                    result = item.getLabel();
+                    break;
+                }
             }
         }
         return result;

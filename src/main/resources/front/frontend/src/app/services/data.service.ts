@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import  *  as  codePays  from  '../models/codealpha2_fr.json';
 import  *  as  enums  from  '../models/enums.json';
+import  *  as  legende  from  '../models/legende.json';
 import { DvdForm } from '../models/dvd-form';
 import {FilmListItem} from '../models/film-list-item';
 import {JsonItem} from '../models/json-item';
@@ -8,12 +9,16 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {PaysItem} from '../models/pays-item';
 import {BehaviorSubject} from 'rxjs';
 import {Theme} from "../models/theme";
+import {FilmDisplay} from "../models/film-display";
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   isFormPage: boolean | undefined;
   detailsObject: JsonItem[] = (enums as any).details as JsonItem[];
+  supportObject: JsonItem[] = (enums as any).supports as JsonItem[];
+  sourceObject: JsonItem[] = (enums as any).sources as JsonItem[];
+  legende = (legende as any).default;
   json = (codePays as any).default;
   filmList: FilmListItem[] = [];
   directorList: string[] = [];
@@ -21,6 +26,7 @@ export class DataService {
   paysList: PaysItem[] = [];
   imageDirectory: string |undefined;
   directorSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  dvdSourceArray: JsonItem[] = (enums as any).sources as JsonItem[];
 
   constructor(private _snackBar: MatSnackBar) {
     for (const property in this.json) {
@@ -57,6 +63,53 @@ export class DataService {
       }
     }
     return paysLabels;
+  }
+  createListMap(film : DvdForm):Map<string, string>{
+    const map = new Map<string, string>();
+    if (film){
+      if (film.support){
+        const name = this.findLabelById(this.supportObject,film.support);
+        map.set(name, this.findLegendeByName("support",name));
+      }
+      if (film.details && film.details.length>0){
+        const detailArray = film.details.split(";");
+        for (const el of detailArray){
+          const name = this.findLabelById(this.detailsObject,el);
+          map.set(name, this.findLegendeByName("detail",name));
+        }
+      }
+      if (film.source){
+        const name = this.findLabelById(this.sourceObject,film.source);
+        map.set(name, this.findLegendeByName("source",name));
+      }
+    }
+    return map;
+  }
+
+  findLegendeByName(liste: string, name: string): string{
+    let list: any[] = [];
+    let object: JsonItem[] = [];
+    switch (liste){
+      case "support":
+        list = this.legende.support;
+        break;
+      case "detail":
+        list = this.legende.detail;
+        break;
+      case "source":
+        list = this.legende.source;
+        break;
+    }
+    if (list && list.length>0){
+       const item = list.find((p: { name: string; })=>p.name.toLowerCase()==name.toLowerCase());
+      if (item){
+        return item.legende;
+      }else{
+        return "";
+      }
+    }else{
+      return "";
+    }
   }
 
   // DVD-LIST MANAGEMENT
@@ -172,6 +225,15 @@ export class DataService {
     }
     return result;
 }
+  convertThemesMapToArray(themes: Map<string,string>):string[]{
+    const result: string[] = [];
+    for (const [key, value] of Object.entries(themes)) {
+      console.log(`${key}: ${value}`);
+      console.log(key);
+      result.push(key);
+    }
+    return result;
+  }
 
   // LOG MANAGEMENT
   openSnackBar(message: string, level: string):void {
@@ -191,6 +253,29 @@ export class DataService {
       }
     });
     return result.join(';');
+  }
+  // MISCELLANEOUS
+  createCategorie(supportId: string):string{
+    const support = this.findLabelById(this.dvdSourceArray,supportId);
+    if (support == 'DVD5' || support== 'DVD9' || support=='BD-R'){
+      return 'ISO';
+    } else{
+      return 'RIP';
+    }
+  }
+
+  isFilmIso(supportId: string):boolean{
+    const support = this.findLabelById(this.dvdSourceArray,supportId);
+    return (support == 'DVD5' || support== 'DVD9' || support=='BD-R')
+  }
+  findLabelById(array: JsonItem[], id: string):string{
+    const idNumber = parseInt(id);
+    const item = array.find(x=>x.id==idNumber);
+    if (item){
+      return item.label;
+    }else{
+      return "";
+    }
   }
 
   isLight(colorValue: string):boolean {

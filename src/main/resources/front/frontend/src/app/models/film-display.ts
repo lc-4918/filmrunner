@@ -19,6 +19,7 @@ export interface FilmDisplay {
   pays: string[];
   subLangs: string[];
 
+  categorie?: string;
   themes?:Theme[];
   realisateurs: string[];
   shortfilms: string[];

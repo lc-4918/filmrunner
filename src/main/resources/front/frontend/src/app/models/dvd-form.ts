@@ -1,8 +1,10 @@
+import {Theme} from "./theme";
+
 export interface DvdForm {
 
 id?: number;
 titre:string;
-titreVf?:string;
+titrevf?:string;
 annee?: number;
 duree?: number;
 description?: string;
@@ -18,7 +20,7 @@ source?: string;
 pays: string[];
 subLangs: string[];
 
-themes?:Map<string,string>;
+themes?: Theme[];
 realisateurs: string[];
 shortfilms: string[];
 

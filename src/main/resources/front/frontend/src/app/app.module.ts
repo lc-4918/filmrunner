@@ -10,7 +10,7 @@ import {MaterialModule} from "./material/material.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {FormsModule} from "@angular/forms";
 import { DvdformComponent } from './dvd-form/dvdform.component';
-import { NumericDirective } from './numeric.directive';
+import { NumericDirective } from './directives/numeric.directive';
 import { ThemeListComponent } from './theme-list/theme-list.component';
 import { ThemeDialog } from './theme-list/theme-dialog/theme-dialog.component';
 import {MAT_DIALOG_DEFAULT_OPTIONS} from "@angular/material/dialog";

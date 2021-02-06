@@ -167,10 +167,10 @@ public class DvdService {
 
         String userDirectory = new File("").getAbsolutePath();
         String fileDownloadFolder = userDirectory+UPLOAD_DIR;
-        String imageUrl = Objects.nonNull(dto.getImageUrl()) ? dto.getImageUrl() : null;
+        String imageUrl = Objects.nonNull(dto.getImageUrl()) && !dto.getImageUrl().isEmpty() ? dto.getImageUrl() : null;
 
-        String pays = String.join(";",dto.getPays());
-        String subLangs = String.join(";",dto.getSubLangs());
+        String pays = Objects.nonNull(dto.getPays()) && !dto.getPays().isEmpty()? String.join(";",dto.getPays()):null;
+        String subLangs = Objects.nonNull(dto.getSubLangs()) && !dto.getSubLangs().isEmpty()? String.join(";",dto.getSubLangs()):null;
 
         List<String> IRealisateurs = dto.getRealisateurs();
         Set<Director> realisateurs = new HashSet<>();
@@ -181,12 +181,12 @@ public class DvdService {
                 realisateurs.add(director);
             });
 
-        Map<String, String> IThemes = dto.getThemes();
+        List<ThemeDTO> IThemes = dto.getThemes();
         Set<Theme> themes = new HashSet<>();
         if (Objects.nonNull(IThemes) && !IThemes.isEmpty())
-            IThemes.forEach((name, color) -> {
-                Optional<Theme> optionalTheme = themeRepository.findThemeByName(name);
-                Theme theme = optionalTheme.orElseGet(() -> themeRepository.save(new Theme(name,color)));
+            IThemes.forEach((themeDTO) -> {
+                Optional<Theme> optionalTheme = themeRepository.findThemeByName(themeDTO.getName());
+                Theme theme = optionalTheme.orElseGet(() -> themeRepository.save(new Theme(themeDTO.getName(),themeDTO.getColor())));
                 themes.add(theme);
             });
 
@@ -286,30 +286,84 @@ public class DvdService {
     public DvdForm convertDvdToFormDto(Dvd dvd){
         DvdForm dvdForm = new DvdForm();
         dvdForm.setId(dvd.getId());
-        dvdForm.setTitre(dvd.getTitre());
-        dvdForm.setAnnee(dvd.getAnnee());
-        dvdForm.setDuree(dvd.getDuree());
-        dvdForm.setDescription(dvd.getDescription());
-        dvdForm.setImageUrl(dvd.getImageUrl());
-        dvdForm.setSubLangs(deleteListIfEmpty(Arrays.asList(dvd.getSublangs().split(";"))));
-        dvdForm.setPays(deleteListIfEmpty(Arrays.asList(dvd.getPays().split(";"))));
-        dvdForm.setSupport(dvd.getSupport());
-        dvdForm.setType(dvd.getType());
-        dvdForm.setNorme(dvd.getNorme());
-        dvdForm.setDetails(dvd.getDetails());
-        dvdForm.setFormat(dvd.getFormat());
-        dvdForm.setSource(dvd.getSource());
-        List<String> directors = dvd.getDirectors()
-                .stream()
-                .map(Director::getName).collect(Collectors.toList());
-        dvdForm.setRealisateurs(directors);
-        List<String> shortFilms = dvd.getShortfilms()
-                .stream()
-                .map(Shortfilm::getBody).collect(Collectors.toList());
-        dvdForm.setShortfilms(shortFilms);
-        Map<String,String> themes = dvd.getThemes().stream()
-                .collect(Collectors.toMap(Theme::getName, Theme::getColor));
-        dvdForm.setThemes(themes);
+        if (Objects.nonNull(dvd.getTitre())){
+            dvdForm.setTitre(dvd.getTitre());
+        }
+
+        if (Objects.nonNull(dvd.getTitreVf())){
+            dvdForm.setTitrevf(dvd.getTitreVf());
+        }
+
+        if (Objects.nonNull(dvd.getAnnee())){
+            dvdForm.setAnnee(dvd.getAnnee());
+        }
+
+        if (Objects.nonNull(dvd.getDuree())){
+            dvdForm.setDuree(dvd.getDuree());
+        }
+
+        if (Objects.nonNull(dvd.getDescription())){
+            dvdForm.setDescription(dvd.getDescription());
+        }
+
+        if (Objects.nonNull(dvd.getImageUrl())){
+            dvdForm.setImageUrl(dvd.getImageUrl());
+        }
+
+        if (Objects.nonNull(dvd.getSublangs())){
+            dvdForm.setSubLangs(deleteListIfEmpty(Arrays.asList(dvd.getSublangs().split(";"))));
+        }
+
+        if (Objects.nonNull(dvd.getPays())){
+            dvdForm.setPays(deleteListIfEmpty(Arrays.asList(dvd.getPays().split(";"))));
+        }
+
+        if (Objects.nonNull(dvd.getSupport())){
+            dvdForm.setSupport(dvd.getSupport());
+        }
+
+        if (Objects.nonNull(dvd.getType())){
+            dvdForm.setType(dvd.getType());
+        }
+        if (Objects.nonNull(dvd.getNorme())){
+            dvdForm.setNorme(dvd.getNorme());
+        }
+
+        if (Objects.nonNull(dvd.getDetails())){
+            dvdForm.setDetails(dvd.getDetails());
+        }
+
+        if (Objects.nonNull(dvd.getFormat())){
+            dvdForm.setFormat(dvd.getFormat());
+        }
+
+        if (Objects.nonNull(dvd.getSource())){
+            dvdForm.setSource(dvd.getSource());
+        }
+
+        if (Objects.nonNull(dvd.getDirectors())){
+            List<String> directors = dvd.getDirectors()
+                    .stream()
+                    .map(Director::getName).collect(Collectors.toList());
+            dvdForm.setRealisateurs(directors);
+        }
+
+        if (Objects.nonNull(dvd.getShortfilms())){
+            List<String> shortFilms = dvd.getShortfilms()
+                    .stream()
+                    .map(Shortfilm::getBody).collect(Collectors.toList());
+            dvdForm.setShortfilms(shortFilms);
+        }
+
+        if (Objects.nonNull(dvd.getThemes()) && !dvd.getThemes().isEmpty()){
+            List<ThemeDTO> themesDTO = new ArrayList<>();
+            for (Theme theme : dvd.getThemes()){
+                ThemeDTO themeDTO = new ThemeDTO(theme.getName(),theme.getColor());
+                themesDTO.add(themeDTO);
+            }
+            dvdForm.setThemes(themesDTO);
+        }
+
         return dvdForm;
     }
 

@@ -79,8 +79,13 @@ public class CsvReader {
                     String cm3 = sheet.getCell(17, i).getContents();
                     String cm4 = sheet.getCell(18, i).getContents();
                     String cm5 = sheet.getCell(19, i).getContents();
+                    String cm6 = sheet.getCell(20, i).getContents();
+                    String cm7 = sheet.getCell(21, i).getContents();
+                    String cm8 = sheet.getCell(22, i).getContents();
+                    String cm9 = sheet.getCell(23, i).getContents();
+                    String cm10 = sheet.getCell(24, i).getContents();
                     Integer ligne = i+1;
-                    XlsObject line = new XlsObject(format,type,titre,annee,realisateurs,realisateursId,pays,duree,sub,support,norme,details,source,titreVf,label,cm1,cm2,cm3,cm4,cm5,ligne);
+                    XlsObject line = new XlsObject(format,type,titre,annee,realisateurs,realisateursId,pays,duree,sub,support,norme,details,source,titreVf,label,cm1,cm2,cm3,cm4,cm5,cm6,cm7,cm8,cm9,cm10,ligne);
                     System.out.println("XLS OBJECT ligne " + ligne + " : " + line.toString());
                     if (!line.getTitre().isEmpty()){
                         data.add(line);

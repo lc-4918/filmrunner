@@ -9,7 +9,6 @@ import *  as  enums from '../../models/enums.json';
 import {JsonItem} from "../../models/json-item";
 import {FilmDisplay} from "../../models/film-display";
 import {Theme} from "../../models/theme";
-import {FilmListItem} from "../../models/film-list-item";
 
 @Component({
   selector: 'app-display-film-dialog',
@@ -24,8 +23,11 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
   dvdSourceArray: JsonItem[] = (enums as any).sources as JsonItem[];
   dvdNormeArray: JsonItem[] = (enums as any).normes as JsonItem[];
   hasSubscription = false;
+  realGroupNumber: number = 0;
   filmReceived: DvdForm |undefined;
   film: FilmDisplay | undefined;
+  filmLabels: Map<String,String> = new Map<string, string>();
+  listLabels: Map<string,string> = new Map<string, string>();
   constructor(
     public dialogRef: MatDialogRef<DisplayFilmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -45,12 +47,14 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
     ).subscribe(
       res=>{
         this.filmReceived = res;
-        this.transformPays();
+        //this.transformPays();
+        this.createPaysMap();
+        this.createListMap();
         this.transformThemes();
         const filmThemes = this.transformThemes();
         this.film = {
           titre: this.filmReceived.titre,
-          titreVf: this.filmReceived.titreVf,
+          titreVf: this.filmReceived.titrevf,
           annee: this.filmReceived.annee,
           duree: this.filmReceived.duree,
           description: this.filmReceived.description,
@@ -58,6 +62,7 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
           support: this.filmReceived.support ? this.findLabelById(this.dvdSupportArray, this.filmReceived.support) : undefined,
           genre: this.filmReceived.type ? this.findLabelById(this.dvdGenreArray, this.filmReceived.type) : undefined,
           source: this.filmReceived.source ? this.findLabelById(this.dvdSourceArray, this.filmReceived.source) : undefined,
+          categorie: this.filmReceived.support? this.dataService.createCategorie(this.filmReceived.support): undefined,
           norme: this.filmReceived.norme ? this.findLabelById(this.dvdNormeArray, this.filmReceived.norme) : undefined,
           details: this.filmReceived.details ? this.parseDetails(this.filmReceived.details) : undefined,
           pays: this.filmReceived.pays,
@@ -111,15 +116,38 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
       }
     }
   }
+  createPaysMap():void{
+    if (this.filmReceived){
+      if (this.filmReceived.pays && this.filmReceived.pays.length>0){
+        for (let i=0; i<this.filmReceived.pays.length; i++) {
+          const p = this.dataService.findLabelByCodePays(this.filmReceived.pays[i]);
+          this.filmLabels.set(this.filmReceived.pays[i],p);
+        }
+      }
+      if (this.filmReceived.subLangs && this.filmReceived.subLangs.length>0){
+        for (let i=0; i<this.filmReceived.subLangs.length; i++) {
+          const p = this.dataService.findLabelByCodePays(this.filmReceived.subLangs[i]);
+          this.filmLabels.set(this.filmReceived.subLangs[i],p);
+        }
+      }
+    }
+  }
+  createListMap():void{
+    if (this.filmReceived){
+      this.listLabels = this.dataService.createListMap(this.filmReceived);
+    }
+  }
+
   transformThemes():Theme[]{
     let filmThemes:Theme[] = [];
     if (this.filmReceived){
       if (this.filmReceived.themes){
-        filmThemes = this.dataService.convertMapThemeToTheme(this.filmReceived.themes);
+        filmThemes = this.filmReceived.themes;
       }
     }
-    return filmThemes;
+    return this.cleanThemes(filmThemes);
   }
+
   getColor(theme: Theme):string{
     if (theme.color){
       const isLightBackground = this.dataService.isLight(theme.color);
@@ -127,6 +155,15 @@ export class DisplayFilmDialogComponent implements OnInit, OnDestroy {
     }else {
       return 'rgba(0,0,0,.87)';
     }
+  }
+  cleanThemes(themes: Theme[]):Theme[]{
+    const theme = themes.find(x=>x.name=='RIP'.toLowerCase()||x.name=='ISO'.toLowerCase());
+    const result:Theme[] = [];
+    if (theme){
+      const index = themes.indexOf(theme,0);
+      themes.splice(index,1);
+    }
+    return themes;
   }
 
   close(): void {

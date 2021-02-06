@@ -25,16 +25,20 @@ export class FilmListComponent implements OnInit, OnDestroy {
   isLoadingResults = true;
   isLaunching = false;
   isLoggedIn = false;
+  filterBox=false;
   realisateurId: number | undefined;
   resultsLength: number | undefined;
-  themes: Theme[] |undefined;
-  themesSelected:string[] = [];
+  superThemes: Theme[] = [];
+  themes: Theme[] = [];
+  themesSelected: string[] = [];
   columnsToDisplay: string[] = ['titre', 'realisateurs', 'annee', 'pays'];
   dataSource = new MatTableDataSource<FilmListItem>();
   elements: FilmListItem[] = [];
-  @ViewChild(MatSort,{static:false})set content(sort: MatSort) {
+
+  @ViewChild(MatSort, {static: false}) set content(sort: MatSort) {
     this.dataSource.sort = sort;
   }
+
   encapsulation: ViewEncapsulation.None | undefined
 
   constructor(
@@ -48,13 +52,14 @@ export class FilmListComponent implements OnInit, OnDestroy {
 
     this.hasSubscription = true;
 
+    // check if request has director id
     route.params.pipe(
-      takeWhile(()=>this.hasSubscription)
+      takeWhile(() => this.hasSubscription)
     ).subscribe(val => {
-      if (val.id){
+      if (val.id) {
         this.realisateurId = val.id;
         this.initializeRealisateurs(val.id);
-      }else {
+      } else {
         this.dataService.directorSubject.next(false);
         this.isLoggedIn = !!this.tokenStorageService.getToken();
         this.initializeFilms();
@@ -62,52 +67,52 @@ export class FilmListComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
+    // set logout action
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     this.authService.loggedIn.pipe(
-      takeWhile(()=>this.hasSubscription)
+      takeWhile(() => this.hasSubscription)
     ).subscribe(
-      res=>{
+      res => {
         this.isLoggedIn = res;
-        const actionIsPresent =this.columnsToDisplay.includes('actions');
-        if (!this.isLoggedIn && actionIsPresent){
+        const actionIsPresent = this.columnsToDisplay.includes('actions');
+        if (!this.isLoggedIn && actionIsPresent) {
           this.columnsToDisplay.pop();
         }
       }
     )
+    // retrieve theme list
     this.restService.getAllThemes().pipe(
-      filter(()=>!this.dataService.hasThemeList()),
-      takeWhile(()=>this.hasSubscription)
+      filter(() => !this.dataService.hasThemeList()),
+      takeWhile(() => this.hasSubscription)
     ).subscribe(
-      (res)=>{
+      (res) => {
         this.dataService.cleanEmptyThemes(res);
         this.dataService.setThemeList(res);
-        this.themes = res;
+        this.parseThemes(res);
       },
       error => {
         console.log(error);
       }
     )
-    this.themes = this.dataService.getThemeList();
   }
 
-  initializeFilms():void{
-    if (this.isLaunching){
+  /** INITIALIZE WHOLE FILM LIST */
+  initializeFilms(): void {
+    if (this.isLaunching) {
       return;
     }
     this.isLoadingResults = true;
     console.log("initialize lancé");
     this.restService.findAllDvd().pipe(
-      takeWhile(()=>this.hasSubscription),
+      takeWhile(() => this.hasSubscription),
       catchError(() => {
         this.isLoadingResults = false;
         return observableOf([]);
       })).subscribe(
-      (res: FilmListItem[])=>{
-        if (res){
-          if (res.length===0){
-            this.dataService.openSnackBar("aucun film","info");
-          }
+      (res: FilmListItem[]) => {
+        if (res) {
+          this.checkIfListIsEmpty(res);
           this.transformPays(res);
           this.elements = res;
           this.dataSource = new MatTableDataSource(this.elements);
@@ -116,30 +121,30 @@ export class FilmListComponent implements OnInit, OnDestroy {
           this.dataService.setFilmList(this.elements);
           this.dataSource.sort = this.content || null;
           const sortState: Sort = {active: 'name', direction: 'desc'};
-          if (this.content){
+          if (this.content) {
             this.content.active = sortState.active;
             this.content.direction = sortState.direction;
             this.content.sortChange.emit(sortState);
           }
+          this.dataSource.filterPredicate = this.getFilterPredicate();
           this.toggleActionColumn();
         }
       }
     )
   }
-  initializeRealisateurs(id: number):void{
+  /** INITIALIZE DIRECTOR'S FILM LIST */
+  initializeRealisateurs(id: number): void {
     this.isLoadingResults = true;
     this.restService.findDvdByDirectorId(id).pipe(
       //filter(()=>!this.dataService.hasFilm()),
-      takeWhile(()=>this.hasSubscription),
+      takeWhile(() => this.hasSubscription),
       catchError(() => {
         this.isLoadingResults = false;
         return observableOf([]);
       })).subscribe(
-      (res: FilmListItem[])=>{
-        if (res){
-          if (res.length===0){
-            this.dataService.openSnackBar("aucun film","info");
-          }
+      (res: FilmListItem[]) => {
+        if (res) {
+          this.checkIfListIsEmpty(res);
           this.transformPays(res);
           this.elements = res;
           this.dataSource = new MatTableDataSource(this.elements);
@@ -147,109 +152,138 @@ export class FilmListComponent implements OnInit, OnDestroy {
           this.resultsLength = res.length;
           this.dataSource.sort = this.content || null;
           const sortState: Sort = {active: 'name', direction: 'desc'};
-          if (this.content){
+          if (this.content) {
             this.content.active = sortState.active;
             this.content.direction = sortState.direction;
             this.content.sortChange.emit(sortState);
           }
           // informe que l'on est sur une liste de films d'un réalisateur
+          this.dataSource.filterPredicate = this.getFilterPredicate();
           this.dataService.directorSubject.next(true);
         }
       }
     )
   }
 
-  toggleActionColumn():void{
-    if (this.isLoggedIn){
-      this.columnsToDisplay.push('actions');
-    }else{
-      const index = this.columnsToDisplay.indexOf('actions',0);
-      if (index>=0){
-        this.columnsToDisplay.splice(index,1);
-      }
-    }
-  }
-  transformPays(res: FilmListItem[]):void{
-    for (const film of res){
-      if (film.pays && film.pays.split(';').length>0){
+  /** BUILD PAYS */
+  transformPays(res: FilmListItem[]): void {
+    for (const film of res) {
+      if (film.pays && film.pays.split(';').length > 0) {
         film.pays = this.dataService.transformCodesToPaysLabels(film.pays);
       }
     }
   }
+  /** BUILD CATEGORIES */
+  parseThemes(res: Theme[]):void {
+    for (const theme of res) {
+      (theme.name=='iso' || theme.name=='rip') ? this.superThemes.push(theme): this.themes.push(theme);
+    }
+  }
 
-  applyFilter(event: Event):void {
+  /** FILTERING */
+  applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    this.resultsLength = this.dataSource.filteredData.length ;
+    this.resultsLength = this.dataSource.filteredData.length;
   }
-
-  openFilmByRealisateur(realisateur: string):void{
-    this.restService.getDirectorIdByName(realisateur).pipe(
-      takeWhile(()=>this.hasSubscription)
-    ).subscribe(
-      res =>{
-        this.realisateurId = parseInt(res);
-        this.router.navigate(['/director',parseInt(res)], { relativeTo: this.route }).then();
-      },
-      error => {
-        this.dataService.openSnackBar("impossible de lire les données du réalisateur","error");
-      }
-    )
-  }
-
-  filterByTheme(event: any, theme: string):void{
-    if (this.themesSelected.includes(theme)){
-      const index = this.themesSelected.indexOf(theme,0);
-      this.themesSelected.splice(index,1);
-      if (this.themesSelected.length==0){
-        this.dataSource.filter = '';
-        this.dataSource.data = this.elements;
-        this.resultsLength = this.dataSource.data.length;
-        return;
-      }
-    }else{
+  filter(event: any, theme: string):void{
+    if (this.themesSelected.includes(theme)) {
+      const index = this.themesSelected.indexOf(theme, 0);
+      this.themesSelected.splice(index, 1);
+    } else {
       this.themesSelected.push(theme);
     }
-    let setFilms = new Set<FilmListItem>();
-    for (const themeName of this.themesSelected){
-      const films: FilmListItem[] = this.dataService.getFilmList().filter(x=>x.themes?.includes(themeName));
-      for (const film of films){
-        setFilms.add(film);
+    // create string of our searching values and split if by '$'
+    const filterValue = this.themesSelected.join('$');
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.resultsLength = this.dataSource.filteredData.length;
+  }
+  getFilterPredicate():(row: FilmListItem, filters: string)=>boolean{
+    return (row: FilmListItem, filters: string)=>{
+      if(this.filterBox){
+        return row.titre.includes(filters) || row.realisateurs?.includes(filters) || row.pays?.includes(filters) || row.annee?.toString().includes(filters);
+      }else{
+        this.filterBox = false;
+        const matchFilter = [];
+        const filterArray = this.themesSelected;
+        if (row.themes){
+          const filters = row.themes;
+          for (const thString of filterArray){
+            const customFilter = filters.includes(thString);
+            matchFilter.push(customFilter);
+          }
+        }
+        return matchFilter.every(Boolean);
       }
-    }
-    this.dataSource.data = Array.from(setFilms);
-    this.resultsLength = this.dataSource.data.length;
+    };
   }
 
+  /** DIALOGS */
   openDisplayFilmDialog(id: number): void {
     const dialogRef = this.dialog.open(DisplayFilmDialogComponent, {
-      width: '600px',
-      data: {idFilm: id,
-        name: null}
+      height: '700px',
+      width: '1000px',
+      data: {
+        idFilm: id,
+        name: null
+      }
     });
   }
-
   openDeleteConfirmDialog(element: FilmListItem): void {
     const dialogRef = this.dialog.open(DeleteFilmDialogComponent, {
       width: '600px',
-      data: {idFilm: element.id,
-        name: element.titre}
+      data: {
+        idFilm: element.id,
+        name: element.titre
+      }
     });
   }
 
-
-  editRealisateur(id: number):void{
-    this.router.navigate(['/director/edit/',id], { relativeTo: this.route }).then();
+/** AUTH ACTIONS */
+  toggleActionColumn(): void {
+    if (this.isLoggedIn) {
+      this.columnsToDisplay.push('actions');
+    } else {
+      const index = this.columnsToDisplay.indexOf('actions', 0);
+      if (index >= 0) {
+        this.columnsToDisplay.splice(index, 1);
+      }
+    }
   }
-  editFilm(id: number):void{
-    this.router.navigate(['/edit/',id], { relativeTo: this.route }).then();
-  }
-
-  logout():void {
+  logout(): void {
     this.tokenStorageService.signOut();
     window.location.reload();
   }
-  ngOnDestroy():void {
+
+  /** NAVIGATION */
+  openFilmByRealisateur(realisateur: string): void {
+    this.restService.getDirectorIdByName(realisateur).pipe(
+      takeWhile(() => this.hasSubscription)
+    ).subscribe(
+      res => {
+        this.realisateurId = parseInt(res);
+        this.router.navigate(['/director', parseInt(res)], {relativeTo: this.route}).then();
+      },
+      error => {
+        this.dataService.openSnackBar("impossible de lire les données du réalisateur", "error");
+      }
+    )
+  }
+  editRealisateur(id: number): void {
+    this.router.navigate(['/director/edit/', id], {relativeTo: this.route}).then();
+  }
+  editFilm(id: number): void {
+    this.router.navigate(['/edit/', id], {relativeTo: this.route}).then();
+  }
+
+  /** ALERT */
+  checkIfListIsEmpty(res: FilmListItem[]):void{
+    if (res.length === 0) {
+      this.dataService.openSnackBar("aucun film", "info");
+    }
+  }
+
+  ngOnDestroy(): void {
     this.hasSubscription = false;
   }
 

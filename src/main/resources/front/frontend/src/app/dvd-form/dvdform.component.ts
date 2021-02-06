@@ -32,6 +32,7 @@ export class DvdformComponent implements OnInit, OnDestroy {
   pays: string[] = [];
   directors: string[] = [];
   themes: Theme[] | undefined;
+  selectedThemes: Theme[] = [];
   dvdDetailMap: Map<number,boolean> = new Map<number,boolean>();
   hasDescription: boolean = false;
   descriptionToggleLabel = "Ajouter une description";
@@ -53,7 +54,7 @@ export class DvdformComponent implements OnInit, OnDestroy {
   shortfilmForm = this.fb.group({
     shortfilmTab: this.fb.array([],{updateOn: 'blur'})
   });
-  themesControl = new FormControl();
+  themesControl = new FormControl([]);
 
   constructor(private restService: RestService, private dataService: DataService,private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
     this.hasSubscription = true;
@@ -83,7 +84,11 @@ export class DvdformComponent implements OnInit, OnDestroy {
       ).subscribe(
         res=>{
           this.cleanEmptyList(res);
-          this.componentDvd = res;;
+          this.componentDvd = res;
+          if (this.componentDvd.themes && this.componentDvd.themes.length>0){
+            this.themesControl.setValue(this.componentDvd.themes);
+            this.selectedThemes = this.componentDvd.themes;
+          }
           this.dvdDetailMap = this.dataService.createDetailsMap(this.componentDvd);
           const desc = this.componentDvd.description;
           this.hasDescription = desc!==undefined && desc!==null && desc.length>0;
@@ -92,7 +97,11 @@ export class DvdformComponent implements OnInit, OnDestroy {
           if (this.hasShortfilm){
             this.setFormShortfilms();
           }
-          this.themesControl.setValue(this.componentDvd.themes);
+/*          if (this.componentDvd.themes){
+            for (const th of this.componentDvd.themes.entries()){
+              this.themesControl.patchValue(th[1]);
+            }
+          }*/
           if (this.componentDvd.imageUrl){
             const length =this.componentDvd.imageUrl.split('\\').length;
             this.currentFile = this.componentDvd.imageUrl?.split('\\')[length-1];
@@ -169,6 +178,17 @@ export class DvdformComponent implements OnInit, OnDestroy {
     this.componentDvd.description = this.hasDescription ? this.componentDvd.description : undefined;
     this.componentDvd.shortfilms = this.getFormShortfilms();
     this.componentDvd.themes = this.themesControl.value;
+    if (this.themesControl.value && this.themesControl.value.length>0){
+      const themesArray: Theme[] = [];
+      for (const theme of this.themesControl.value){
+        const themeDTO: Theme = {
+          name: theme.name,
+          color: theme.color
+        }
+        themesArray.push(themeDTO)
+      }
+      this.componentDvd.themes = themesArray;
+    }
     if (isUpdate){
       this.restService.updateDvd(this.componentDvd).pipe(
         takeWhile(()=>this.hasSubscription),
@@ -349,7 +369,9 @@ export class DvdformComponent implements OnInit, OnDestroy {
       this.selectedFiles = undefined;
     }
   }
-
+  compareFn(o1: any, o2: any) {
+    return o1.name == o2.name;
+  }
 
   // NAVIGATION
   goToDvdPage(): void{

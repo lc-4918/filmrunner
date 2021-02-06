@@ -1,25 +1,42 @@
+.card{
+  font-size: 18px;
+  cursor: default;
+  position: relative;
+}
 .title-container {
   display: flex;                  /* establish flex container */
   flex-direction: row;            /* default value; can be omitted */
   flex-wrap: nowrap;              /* default value; can be omitted */
   justify-content: space-between; /* switched from default (flex-start, see below) */
   align-items: center;
+  margin-bottom: 30px;
 }
-.title-container > div {
+.titrevf-container {
+  margin-top: 10px;
 }
 h1{
   text-align: center;
+  font-size: 34px;
   display: inline-block;
   margin: 0;
 }
-.theme-list{
-  display: inline-block;
-}
 .content{
   padding-top: 10px;
+  height: 540px;
+  max-height: none;
+  overflow: hidden;
 }
-table{
-  width: 100%;
+.description-container{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.realisateur-container{
+  max-width: 550px;
+  margin-bottom: 30px;
+}
+.production-container{
+  margin-bottom: 15px;
 }
 .flag-box{
   min-width: 24px;
@@ -27,9 +44,50 @@ table{
   background-size: cover;
   display: inline-block;
   margin-right: 5px;
+  vertical-align: middle;
 }
 .flag-box:last-of-type{
   margin-right: 0;
+}
+.duree-container{
+  margin-bottom: 30px;
+}
+.sub-container{
+  margin-bottom: 30px;
+}
+.support-container{
+  margin-bottom: 15px;
+}
+.detail-container{
+  margin-bottom: 30px;
+}
+.cm-container{
+  margin-bottom: 30px;
+}
+.theme-list{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.theme-list mat-chip{
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+.theme-list mat-chip:last-of-type{
+  margin-right: 0;
+}
+.categorie-container{
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+ }
+.categorie{
+  display: inline-block;
+  font-size: 34px;
+}
+.source{
+  display: inline-block;
 }
 .right{
   text-align: right;
@@ -37,6 +95,15 @@ table{
 .flex-center{
   justify-content: center;
 }
-.label{
-  font-size: 12px;
+.flex-center button{
+  align-self: flex-end;
+}
+.close.mat-button {
+  position: inherit;
+  top: 0;
+  right: 0;
+  padding: 2px;
+  line-height: 3px;
+  min-width: auto;
+  margin-bottom: 40px;
 }

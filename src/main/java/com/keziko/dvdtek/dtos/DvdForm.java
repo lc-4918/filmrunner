@@ -1,5 +1,6 @@
 package com.keziko.dvdtek.dtos;
 
+import com.keziko.dvdtek.entities.Theme;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ public class DvdForm {
     private List<String> pays;
     private List<String> realisateurs;
     private List<String> shortfilms;
-    private Map<String,String> themes;
+    private List<ThemeDTO> themes;
 
 
 }
