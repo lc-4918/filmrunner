@@ -11,8 +11,8 @@ Application de bibliothèque de films
 
 ## Installation
 
-Configurer l'environnement de développement Angular.<br>
-Ou bien modifier le fichier src/main/resources/front/frontend/src/environments/environment.ts
+Configurer l'environnement de développement Angular,<br>
+ou bien modifier le fichier src/main/resources/front/frontend/src/environments/environment.ts
 
 ```javascript
 export const environment = {
