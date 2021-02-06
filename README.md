@@ -29,7 +29,4 @@ http://localhost:4200
 Les fichiers excel doivent avoir un formatage prédéfini pour pouvoir être importés
 
 ## Demo
-
-```bash
-https://filmrunner.herokuapp.com/
-```
+[Démo sur Heroku](https://filmrunner.herokuapp.com/)
