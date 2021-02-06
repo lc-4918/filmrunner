@@ -1,12 +1,13 @@
 # Filmrunner
 
-Application de bibliothèque de films avec Spring Boot et Angular intégré
+Application de bibliothèque de films
 
-Angular 11
-Angular Material
-Spring Security avec authentification JWT
-Base de données H2
-Lecture et écriture de fichiers XLS avec jxl
+* Spring Boot
+* Angular 11 intégré
+* Angular Material
+* Spring Security avec authentification JWT
+* Base de données H2
+* Lecture et écriture de fichiers XLS avec jxl
 
 ## Installation
 
