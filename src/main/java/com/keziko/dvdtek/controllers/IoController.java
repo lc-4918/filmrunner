@@ -1,8 +1,6 @@
 package com.keziko.dvdtek.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keziko.dvdtek.config.CsvReader;
 import com.keziko.dvdtek.dtos.ResponseMessage;
@@ -12,8 +10,6 @@ import com.keziko.dvdtek.services.FileUploadUtil;
 import com.keziko.dvdtek.services.IoService;
 import jxl.write.WriteException;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.DataInput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

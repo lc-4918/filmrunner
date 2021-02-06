@@ -28,16 +28,7 @@ public class XlsObject {
     private String source;
     private String titreVf;
     private String themes;
-    private String cm1;
-    private String cm2;
-    private String cm3;
-    private String cm4;
-    private String cm5;
-    private String cm6;
-    private String cm7;
-    private String cm8;
-    private String cm9;
-    private String cm10;
+    private String[] cms;
     private Integer ligneFichier;
 
     @Override
@@ -58,11 +49,6 @@ public class XlsObject {
                 ", source='" + source + '\'' +
                 ", titreVf='" + titreVf + '\'' +
                 ", themes='" + themes + '\'' +
-                ", cm1='" + cm1 + '\'' +
-                ", cm2='" + cm2 + '\'' +
-                ", cm3='" + cm3 + '\'' +
-                ", cm4='" + cm4 + '\'' +
-                ", cm5='" + cm5 + '\'' +
                 '}';
     }
 }

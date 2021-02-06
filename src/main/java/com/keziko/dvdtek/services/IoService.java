@@ -289,25 +289,11 @@ public class IoService {
 
         // COURT-METRAGES
         Set<Shortfilm> shortfilms = new HashSet<>();
-        if (Objects.nonNull(object.getCm1()) && !object.getCm1().isEmpty()) {
-            Shortfilm shortfilm = new Shortfilm(object.getCm1());
-            shortfilms.add(shortfilm);
-        }
-        if (Objects.nonNull(object.getCm2()) && !object.getCm2().isEmpty()) {
-            Shortfilm shortfilm = new Shortfilm(object.getCm2());
-            shortfilms.add(shortfilm);
-        }
-        if (Objects.nonNull(object.getCm3()) && !object.getCm3().isEmpty()) {
-            Shortfilm shortfilm = new Shortfilm(object.getCm3());
-            shortfilms.add(shortfilm);
-        }
-        if (Objects.nonNull(object.getCm4()) && !object.getCm4().isEmpty()) {
-            Shortfilm shortfilm = new Shortfilm(object.getCm4());
-            shortfilms.add(shortfilm);
-        }
-        if (Objects.nonNull(object.getCm5()) && !object.getCm5().isEmpty()) {
-            Shortfilm shortfilm = new Shortfilm(object.getCm5());
-            shortfilms.add(shortfilm);
+        if (Objects.nonNull(object.getCms()) && object.getCms().length>0){
+            for (String cm : object.getCms()){
+                Shortfilm shortfilm = new Shortfilm(cm);
+                shortfilms.add(shortfilm);
+            }
         }
 
         // LANGUES

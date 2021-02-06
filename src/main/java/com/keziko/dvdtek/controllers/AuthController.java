@@ -55,7 +55,13 @@ public class AuthController {
         this.jwtUtils = jwtUtils;
     }
 
-
+    /**
+     * Connexion de l'utilisateur
+     * Génération du token
+     * Méthode POST {@code AuthService#login(credentials:any)}
+     * @param loginRequest objet contenant le login et le mot de passe
+     * @return un {@link JwtResponse} contenant le token et les informations de connexion
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("/signin | loginRequest = {}",loginRequest);
@@ -84,6 +90,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * Sauvegarde d'un nouvel utilisateur
+     * Méthode POST {@code AuthService#register(user:any)}
+     * @param signUpRequest objet {@link SignupRequest} avec les données du formulaire
+     * @return un objet {@link MessageResponse} avec le statut de la connexion
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         log.info("/signup | signUpRequest = {}",signUpRequest);

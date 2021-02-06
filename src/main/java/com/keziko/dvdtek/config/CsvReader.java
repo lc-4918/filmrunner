@@ -49,6 +49,7 @@ public class CsvReader {
             workbook = Workbook.getWorkbook(file,settings);
             Sheet sheet = workbook.getSheet(0);
             int rows = sheet.getRows();
+            int colums = sheet.getColumns();
             System.out.println("NOMBRE DE LIGNES: " + rows);
 
             // démarre à 1 pour exclure la ligne d'en-têtes
@@ -74,18 +75,14 @@ public class CsvReader {
                     String source = sheet.getCell(12, i).getContents();
                     String titreVf = sheet.getCell(13, i).getContents();
                     String label = sheet.getCell(14, i).getContents();
-                    String cm1 = sheet.getCell(15, i).getContents();
-                    String cm2 = sheet.getCell(16, i).getContents();
-                    String cm3 = sheet.getCell(17, i).getContents();
-                    String cm4 = sheet.getCell(18, i).getContents();
-                    String cm5 = sheet.getCell(19, i).getContents();
-                    String cm6 = sheet.getCell(20, i).getContents();
-                    String cm7 = sheet.getCell(21, i).getContents();
-                    String cm8 = sheet.getCell(22, i).getContents();
-                    String cm9 = sheet.getCell(23, i).getContents();
-                    String cm10 = sheet.getCell(24, i).getContents();
+                    String[] cms = new String[10];
+                    int k = 0;
+                    for (int j=15; j<colums; j++){
+                        cms[k] = sheet.getCell(j, i).getContents();
+                    }
+
                     Integer ligne = i+1;
-                    XlsObject line = new XlsObject(format,type,titre,annee,realisateurs,realisateursId,pays,duree,sub,support,norme,details,source,titreVf,label,cm1,cm2,cm3,cm4,cm5,cm6,cm7,cm8,cm9,cm10,ligne);
+                    XlsObject line = new XlsObject(format,type,titre,annee,realisateurs,realisateursId,pays,duree,sub,support,norme,details,source,titreVf,label,cms,ligne);
                     System.out.println("XLS OBJECT ligne " + ligne + " : " + line.toString());
                     if (!line.getTitre().isEmpty()){
                         data.add(line);
